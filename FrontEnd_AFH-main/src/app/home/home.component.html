@@ -1,0 +1,160 @@
+<body>
+  <!-- SIDEBAR -->
+  <section id="sidebar">
+    <div style="padding-bottom: 20px;" class="boxIcon">
+      <img src="../../assets/Logoafh.png">
+      <p>AFH<br>METALMECANICOS</p>
+    </div>
+    <ul class="side-menu top">
+      <li class="active">
+        <a [routerLink]="['/home']">
+          <i class="bx bxs-dashboard"></i>
+          <span class="text">Inicio</span>
+        </a>
+      </li>
+      <li *ngIf="userLocalStorage.area === 'GERENCIA'">
+        <a [routerLink]="['/staff']">
+          <i class="bx bxs-group"></i>
+          <span class="text">Usuarios</span>
+        </a>
+      </li>
+      <li *ngIf="userLocalStorage.area === 'GERENCIA' || userLocalStorage.area === 'COMERCIAL'">
+        <a [routerLink]="['/quotes']" >
+          <i class='bx bxs-file' ></i>
+          <span class="text">Cotizaciones</span>
+        </a>
+      </li>
+      <li *ngIf="userLocalStorage.area === 'GERENCIA' || userLocalStorage.area === 'LOGISTICA'">
+        <a [routerLink]="['/tools']">
+          <i class="bx bxs-wrench"></i>
+          <span class="text">Herramientas</span>
+        </a>
+      </li>
+      <li *ngIf="userLocalStorage.area === 'GERENCIA'">
+        <a [routerLink]="['/employes']">
+          <i class="bx bxs-user-account"></i>
+          <span class="text">Empleados</span>
+        </a>
+      </li>
+      <li *ngIf="userLocalStorage.area === 'GERENCIA' || userLocalStorage.area === 'COMERCIAL'">
+        <a [routerLink]="['/clients']">
+          <i class="bx bxs-user-detail"></i>
+          <span class="text">Clientes</span>
+        </a>
+      </li>
+      <li *ngIf="userLocalStorage.area === 'GERENCIA' || userLocalStorage.area === 'LOGISTICA'">
+        <a [routerLink]="['/supplies']">
+          <i class="bx bxs-package"></i>
+          <span class="text">Suministros</span>
+        </a>
+      </li>
+      <li *ngIf="userLocalStorage.area === 'GERENCIA' || userLocalStorage.area === 'LOGISTICA'">
+        <a [routerLink]="['/history']">
+          <i class='bx bx-clipboard'></i>
+          <span class="text">Inventario</span>
+        </a>
+      </li>
+    </ul>
+    <ul class="side-menu">
+      <li>
+        <a [routerLink]="['/configuration']">
+          <i class="bx bxs-cog"></i>
+          <span class="text">Configuración</span>
+        </a>
+      </li>
+      <li>
+        <a style="cursor:pointer" (click)="this.homeService.logOut()" class="logout">
+          <i class="bx bxs-log-out-circle"></i>
+          <span class="text">Cerrar Sesión</span>
+        </a>
+      </li>
+    </ul>
+  </section>
+  <!-- SIDEBAR -->
+
+  <!-- CONTENT -->
+  <section id="content">
+    <!-- NAVBAR -->
+    <nav>
+      <i (click)="changeSidebar()" class="bx bx-menu"></i>
+      <div style="width: 90%"></div>
+      <a href="#" class="profile">
+        <!-- <img [src]="img" /> -->
+      </a>
+    </nav>
+    <!-- NAVBAR -->
+
+    <!-- MAIN -->
+    <main>
+      <div class="head-title">
+        <div class="left">
+          <h1>Inicio</h1>
+          <ul class="breadcrumb">
+            <li>
+              <a>Inicio</a>
+            </li>
+            <li><i class="bx bx-chevron-right"></i></li>
+            <li>
+              <a class="active">Home</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="container-fluid">
+        <div style="padding: 20px;">
+          <strong>¡Bienvenido al sistema SGAFH!</strong>
+          <p>Usuario: <strong > {{userLocalStorage.name}}</strong> Área: <strong >{{userLocalStorage.area}}</strong> </p>
+          <p style="padding-top:10px ; padding-bottom: 10px ;">Modulos a los cuales puedes acceder:</p>
+          <p *ngIf="userLocalStorage.area==='GERENCIA' || userLocalStorage.area==='COMERCIAL' "><strong>* Cotizaciones: </strong> En este módulo podrás gestionar y generar cotizaciones para los clientes. Podrás ingresar los detalles de los servicios a cotizar.</p>
+          <p *ngIf="userLocalStorage.area==='GERENCIA' || userLocalStorage.area==='COMERCIAL' "><strong>* Clientes: </strong> En este módulo podrás administrar la base de datos de clientes. Podrás agregar nuevos clientes y actualizar su información.</p>
+          <p *ngIf="userLocalStorage.area==='GERENCIA' || userLocalStorage.area==='LOGISTICA' "><strong>* Suministros: </strong> En este módulo podrás gestionar el inventario de suministros de la empresa. Podrás agregar nuevos suministros, actualizar sus detalles.</p>
+          <p *ngIf="userLocalStorage.area==='GERENCIA' || userLocalStorage.area==='LOGISTICA' "><strong>* Herramientas: </strong> En este módulo podrás administrar el inventario de herramientas de la empresa. Podrás registrar nuevas herramientas, asignarlas a los empleados, visualizar su estado y controlar su disponibilidad.</p>
+          <p *ngIf="userLocalStorage.area==='GERENCIA'"><strong>* Usuarios: </strong>En este módulo podrás gestionar los usuarios del sistema. Podrás crear cuentas de usuario, asignar el área y dependiendo de esta las funcionalidades del sistema.</p>
+          <p *ngIf="userLocalStorage.area==='GERENCIA'"><strong>* Empleados: </strong> En este módulo podrás administrar la información de los empleados de la empresa. Podrás agregar, editar y eliminar empleados</p>
+        </div>
+        
+        <ul class="box-info">
+          <li *ngIf="userLocalStorage.area==='GERENCIA' || userLocalStorage.area==='LOGISTICA' ">
+            <i class="bx bxs-wrench"></i>
+            <span class="text">
+              <h3>{{ totalTools ? totalTools : 0 }}</h3>
+              <p>Herramientas Registradas</p>
+            </span>
+          </li>
+          <li *ngIf="userLocalStorage.area==='GERENCIA'">
+            <i class="bx bxs-group"></i>
+            <span class="text">
+              <h3>{{ totalUsers ? totalUsers : 0 }}</h3>
+              <p>Usuarios Registrados</p>
+            </span>
+          </li>
+          <li *ngIf="userLocalStorage.area==='GERENCIA' || userLocalStorage.area==='COMERCIAL' ">
+            <i class="bx bxs-file"></i>
+            <span class="text">
+              <h3>{{ totalQuotes ? totalQuotes : 0 }}</h3>
+              <p>Cotizaciones Registradas</p>
+            </span>
+          </li>
+          <li *ngIf="userLocalStorage.area==='GERENCIA' || userLocalStorage.area==='COMERCIAL'">
+            <i class="bx bxs-user-detail"></i>
+            <span class="text">
+              <h3>{{ totalClients ? totalClients : 0 }}</h3>
+              <p>Clientes Registrados</p>
+            </span>
+          </li>
+          <li *ngIf="userLocalStorage.area==='GERENCIA' || userLocalStorage.area==='LOGISTICA' ">
+            <i class="bx bxs-package"></i>
+            <span class="text">
+              <h3>{{ totalSupplies ? totalSupplies : 0 }}</h3>
+              <p>Suministros Registrados</p>
+            </span>
+          </li>
+        </ul>
+        
+      </div>
+    </main>
+    <!-- MAIN -->
+  </section>
+  <!-- CONTENT -->
+</body>

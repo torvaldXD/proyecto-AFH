@@ -1,0 +1,84 @@
+<div class="card">
+    <p-table #dt [value]="quotes" [rows]="5" [paginator]="true" dataKey="code" 
+    [globalFilterFields]="[ 'code', 'project','creationDate' ]" [autoLayout]="true" [styleClass]="selectedSize"
+     currentPageReportTemplate="Vista {first} a {last} de {totalRecords} registros" [showCurrentPageReport]="true">
+    <ng-template pTemplate="caption">
+        <div class="p-d-flex">
+          <h5 class="p-input-icon-left p-ml-auto"></h5>
+            <span class="p-input-icon-left">
+                <i class="pi pi-search"></i>
+                <input  pInputText  #textInput type="text" style="border-radius: 18px; height:45px;" (input)="dt.filterGlobal($any($event.target).value, 'contains')" placeholder="Buscar..." /> 
+            </span>
+        </div>
+    </ng-template>    
+    <ng-template pTemplate="header">
+            <tr>
+                <th>Archivos</th>
+                <th pSortableColumn="code">Codigo <p-sortIcon field="code"></p-sortIcon></th>
+                <th pSortableColumn="client" >Empresa<p-sortIcon field="client"></p-sortIcon></th>
+                <th pSortableColumn="addressedTo" >Dirigido a <p-sortIcon field="addressedTo"></p-sortIcon></th>
+                <th pSortableColumn="project" >Proyecto <p-sortIcon field="project"></p-sortIcon></th>
+                <th pSortableColumn="creationDate" >Fecha de Creacion <p-sortIcon field="creationDate"></p-sortIcon></th>
+                <th>Opciones</th>
+            </tr>
+            </ng-template>
+        <ng-template pTemplate="body" let-quote let-expanded="expanded">
+            <tr>
+                <td>
+                    <button type="button" pButton pRipple [pRowToggler]="quote" class="p-button-text p-button-rounded p-button-plain" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
+                </td>
+                <td>{{quote.code}}</td>
+                <td>{{quote.client.name}}</td>
+                <td>{{quote.project}}</td>
+                <td>{{quote.addressedTo}}</td>
+                <td>{{quote.creationDate}}</td>
+                <td >
+                    <button pTooltip="Editar" pButton pRipple icon="pi pi-pencil"  class="p-button-rounded-sm p-button-success p-mr-2" (click)="updateQuote(quote)"></button>
+                    <button pTooltip="Eliminar "  pButton pRipple icon="pi pi-trash"  class="p-button-rounded-sm p-button-danger p-mr-2" (click)="deleteQuote(quote)"></button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="rowexpansion" let-product>
+            <tr>
+                <td colspan="7">
+                    <div class="p-3">
+                        <p-table class="p-datatable-responsive" [autoLayout]="true" [rowHover]="true" [styleClass]="selectedSize" [value]="product.files" dataKey="rute">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th ><p-sortIcon field="price"></p-sortIcon></th>
+                                    <th >Nombre del archivo <p-sortIcon ></p-sortIcon></th>
+                                    <th >Nombre del Cliente <p-sortIcon ></p-sortIcon></th>
+                                    <th >Fecha de Creacion <p-sortIcon ></p-sortIcon></th>
+                                    <th >Hora de Creacion <p-sortIcon ></p-sortIcon></th>
+                                    <th >Opciones</th>
+                                    <th ></th>
+                                    <th ></th>
+                                    <th ></th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-files>
+                                <tr>
+                                    <td><i class='bx bxs-file-pdf' style="font-size: 1.5rem;color: red;"></i></td>
+                                    <td class="p-p-1">{{ files.name }}</td>
+                                    <td class="p-p-1">{{ files.clientName }}</td>
+                                    <td class="p-p-1">{{ files.creationDate }}</td>
+                                    <td class="p-p-1">{{ files.timeCreated }}</td>
+
+                                    <td >
+                                        <button pTooltip="Descargar" pButton pRipple icon="pi pi-download"  class="p-button-rounded-sm  p-mr-2" (click)="downloadOneFile(files)"></button>
+                                        <button pTooltip="Eliminar "  pButton pRipple icon="pi pi-trash"  class="p-button-rounded-sm p-button-danger p-mr-2" (click)="deleteOneFile(files)"></button>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="emptymessage">
+                                <tr>
+                                    <td colspan="6">There are no order for this product yet.</td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

@@ -1,0 +1,318 @@
+<body>
+  
+    <!-- SIDEBAR -->
+    <section id="sidebar">
+      <div style="padding-bottom: 20px;" class="boxIcon">
+        <img src="../../assets/Logoafh.png">
+        <p>AFH<br>METALMECANICOS</p>
+      </div>
+      <ul class="side-menu top">
+        <li>
+          <a [routerLink]="['/home']">
+            <i class="bx bxs-dashboard"></i>
+            <span class="text">Inicio</span>
+          </a>
+        </li>
+        <li *ngIf="userLocalStorage.area === 'GERENCIA'">
+          <a [routerLink]="['/staff']">
+            <i class="bx bxs-group"></i>
+            <span class="text">Usuarios</span>
+          </a>
+        </li>
+        <li *ngIf="userLocalStorage.area === 'GERENCIA' || userLocalStorage.area === 'COMERCIAL'">
+          <a [routerLink]="['/quotes']" >
+            <i class='bx bxs-file' ></i>
+            <span class="text">Cotizaciones</span>
+          </a>
+        </li>
+        <li *ngIf="userLocalStorage.area === 'GERENCIA' || userLocalStorage.area === 'LOGISTICA'">
+          <a [routerLink]="['/tools']">
+            <i class="bx bxs-wrench"></i>
+            <span class="text">Herramientas</span>
+          </a>
+        </li>
+        <li *ngIf="userLocalStorage.area === 'GERENCIA'">
+          <a [routerLink]="['/employes']">
+            <i class="bx bxs-user-account"></i>
+            <span class="text">Empleados</span>
+          </a>
+        </li>
+        <li *ngIf="userLocalStorage.area === 'GERENCIA'">
+          <a [routerLink]="['/clients']">
+            <i class="bx bxs-user-detail"></i>
+            <span class="text">Clientes</span>
+          </a>
+        </li>
+        <li *ngIf="userLocalStorage.area === 'GERENCIA' || userLocalStorage.area === 'LOGISTICA'">
+          <a [routerLink]="['/supplies']">
+            <i class="bx bxs-package"></i>
+            <span class="text">Suministros</span>
+          </a>
+        </li>
+        <li class="active" *ngIf="userLocalStorage.area === 'GERENCIA' || userLocalStorage.area === 'LOGISTICA'">
+          <a [routerLink]="['/history']">
+            <i class='bx bx-clipboard'></i>
+            <span class="text">Inventario</span>
+          </a>
+        </li>
+      </ul>
+      <ul class="side-menu">
+        <li>
+          <a [routerLink]="['/configuration']">
+            <i class='bx bxs-cog' ></i>
+            <span class="text">Configuración</span>
+          </a>
+        </li>
+        <li>
+          <a style="cursor:pointer" (click)="this.storageService.logOut()" class="logout">
+            <i class='bx bxs-log-out-circle' ></i>
+            <span class="text">Cerrar Sesión</span>
+          </a>
+        </li>
+      </ul>
+    </section>
+    <!-- SIDEBAR -->
+  
+    <!-- CONTENT -->
+    <section id="content">
+      <!-- NAVBAR -->
+      <nav>
+        <i class="bx bx-menu" (click)="changeSidebar()"></i>
+        <div style="width: 90%"></div>
+        <a href="#" class="profile">
+          <!-- <img [src]="img" /> -->
+        </a>
+      </nav>
+      <!-- NAVBAR -->
+  
+      <!-- MAIN -->
+      <main>
+        <div class="head-title">
+          <div class="left">
+            <h1>Inventario</h1>
+            <ul class="breadcrumb">
+              <li>
+                <a>Inventario</a>
+              </li>
+              <li><i class="bx bx-chevron-right"></i></li>
+              <li>
+                <a class="active">Home</a>
+              </li>
+            </ul>
+          </div>
+          <div style="padding-right: 5%;">
+            <button  class="p-button-rounded-sm  p-mr-2" pTooltip="Acciones" tooltipPosition="top" pButton type="button" (click)="menu.toggle($event)" icon="pi pi-th-large"></button>
+            <p-menu #menu [model]="items" [popup]="true" appendTo="body"></p-menu>
+          </div>
+        </div>
+        <br>
+          <p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>
+  
+          <div class="card text-center">
+            <div class="card-header" style="padding: 15px;">
+              <h4>Control de Inventario</h4>
+            </div>
+            <p-table
+              #dt
+              [scrollable]="true"
+              filter="true"
+              [value]="histories"
+              [lazy]="lazy"
+              [rowHover]="true"
+              scrollHeight="300px" 
+              [resizableColumns]="true"
+              (onLazyLoad)="loadInventoryLazy($event)"
+              [paginator]="true"
+              [rows]="5"
+              [totalRecords]="totalRecords"
+              [loading]="loading"
+              [showCurrentPageReport]="true"
+              [resizableColumns]="true"
+              [autoLayout]="true"
+              [styleClass]="selectedSize"
+              currentPageReportTemplate="Vista {first} a {last} de {totalRecords} registros"
+              [globalFilterFields]="['item', 'date', 'typeItem', 'type']"
+            >
+                <ng-template pTemplate="caption">
+                    <div class="p-d-flex">
+                      <button type="button" pButton icon="bx bx-clipboard"  pRipple class="p-button-rounded-sm p-mr-2" pTooltip="Total de Inventario" tooltipPosition="right">{{this.total}}</button>
+                      <h5 class="p-input-icon-left p-ml-auto"></h5>
+                        <span class="p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pTooltip="Filtra por:
+                            Item , Fecha_Realización , Tipo_Item , Acción " tooltipPosition="top" pInputText  #textInput type="text" style="border-radius: 18px; height:45px;" (input)="dt.filterGlobal($any($event.target).value, 'contains')" placeholder="Buscar..." /> 
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="type"> Tipo <p-sortIcon field="type"></p-sortIcon></th>
+                        <th pSortableColumn="typeItem"> Tipo Ítem <p-sortIcon field="typeItem"></p-sortIcon></th>
+                        <th pSortableColumn="date" >Fecha Realización <p-sortIcon field="date"></p-sortIcon></th>
+                        <th pSortableColumn="item" > Ítem <p-sortIcon field="item"></p-sortIcon></th>
+                        <th>Opciones</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-history>
+                    <tr>
+                        <td>{{history.type}}</td>
+                        <td>{{history.typeItem}}</td>
+                        <td>{{history.date}}</td>
+                        <td>{{history.item}}</td>
+                        <td >
+                          <button pTooltip="Visualizar" pButton pRipple icon="pi pi-eye"  class="p-button-rounded-sm p-button-primary p-mr-2" (click)="showHistory(history)"></button>
+                          <button pTooltip="Eliminar "  pButton pRipple icon="pi pi-trash"  class="p-button-rounded-sm p-button-danger p-mr-2" (click)="deleteHistory(history)"></button>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="summary">
+                    <div class="flex align-items-center justify-content-between">
+                        En total hay {{total ? total : 0 }} Registros de Inventario.
+                    </div>
+                </ng-template>
+            </p-table>
+          </div>
+        <p-confirmDialog acceptLabel="Si" [style]="{width: '450px'}"></p-confirmDialog>
+      </main>
+    </section>
+    <div class="loading-overlay" *ngIf="visibleDialog">
+      <div class="loading-container">
+          <p-dialog header="Información" [(visible)]="visibleDialog" [breakpoints]="{ '960px': '75vw' }" [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false">
+              <div class="container-fluid">
+                  <form [formGroup]="formViewInventory">
+                      <div class="flex justify-content-center"> 
+                          <div class="p-grid p-fluid">
+                              <div class="p-col-12 p-md-6" style="padding-left: 15px">
+                                  <div class="input-field">
+                                      <label for="name">Item</label>
+                                      <input type="text" pInputText
+                                        id="name"
+                                        readonly="true"
+                                        formControlName="item"
+                                        style="height: 42px;padding-left: 10px;"
+                                      />
+                                  </div>
+                              </div>
+                              <div class="p-col-12 p-md-6" style="padding-left: 15px">
+                                  <div class="input-field">
+                                      <label for="name">Elemento</label>
+                                      <input style="height: 42px;padding-left: 10px;" type="text" pInputText
+                                        id="name"
+                                        readonly="true"
+                                        formControlName="typeItem"
+                                      />
+                                  </div>
+                              </div>
+                              <div class="p-col-12 p-md-6" style="padding-left: 15px">
+                                  <div class="input-field">
+                                      <label for="name">Tipo</label>
+                                      <input style="height: 42px;padding-left: 10px;" type="text" pInputText
+                                        id="name"
+                                        readonly="true"
+                                        formControlName="type"
+                                      />
+                                  </div>
+                              </div>
+                              <div *ngIf="(this.formViewInventory.value.typeItem ==='Herramienta' && this.formViewInventory.value.typeItem ==='Salida') || (this.formViewInventory.value.typeItem ==='Suministro' && this.formViewInventory.value.typeItem ==='Salida') " class="p-col-12 p-md-6" style="padding-left: 15px">
+                                  <div class="input-field">
+                                      <label for="name">Proyecto</label>
+                                      <input type="text" pInputText
+                                        style="height: 42px;padding-left: 10px;"
+                                        id="name"
+                                        readonly="true"
+                                        formControlName="proyect"
+                                      />
+                                  </div>
+                              </div>
+                              <div *ngIf="(this.formViewInventory.value.typeItem ==='Suministro' && this.formViewInventory.value.type ==='Salida') || (this.formViewInventory.value.typeItem ==='Herramienta' && this.formViewInventory.value.type ==='Salida') "  class="p-col-12 p-md-6" style="padding-left: 15px">
+                                  <div class="input-field">
+                                      <label for="name">Encargado</label>
+                                      <input type="text" pInputText
+                                        id="name"
+                                        readonly="true"
+                                        formControlName="employee"
+                                        style="height: 42px;padding-left: 10px;"
+                                      />
+                                  </div>
+                              </div>
+                              <div *ngIf="this.formViewInventory.value.typeItem ==='Suministro'" class="p-col-12 p-md-6" style="padding-left: 15px">
+                                  <div class="input-field">
+                                      <label for="name">N° de Factura</label>
+                                      <input type="text" pInputText
+                                        id="name"
+                                        readonly="true"
+                                        style="height: 42px;padding-left: 10px;"
+                                        formControlName="idBill"
+                                      />
+                                  </div>
+                              </div>
+                              <div class="p-col-12 p-md-6" style="padding-left: 15px">
+                                  <div class="input-field">
+                                      <label for="name">Fecha de Realización</label>
+                                      <input type="text" pInputText
+                                        id="name"
+                                        readonly="true" 
+                                        formControlName="item"
+                                        style="height: 42px;padding-left: 10px;"
+                                        formControlName="date"
+                                      />
+                                  </div>
+                              </div>
+                              <div *ngIf="this.formViewInventory.value.typeItem ==='Herramienta'" class="p-col-12 p-md-6" style="padding-left: 15px">
+                                  <div class="input-field">
+                                      <label for="name">Fecha de salida</label>
+                                      <input type="text" pInputText
+                                        id="name"
+                                        readonly="true"
+                                        formControlName="item"
+                                        style="height: 42px;padding-left: 10px;"
+                                        formControlName="dateOutside"
+                                      />
+                                  </div>
+                              </div>
+                              <div *ngIf="this.formViewInventory.value.typeItem ==='Herramienta'" class="p-col-12 p-md-6" style="padding-left: 15px">
+                                  <div class="input-field">
+                                      <label for="name">Fecha de ingreso</label>
+                                      <input type="text" pInputText
+                                        id="name"
+                                        readonly="true" 
+                                        formControlName="item"
+                                        style="height: 42px;padding-left: 10px;"
+                                        formControlName="dateInside"
+                                      />
+                                  </div>
+                              </div>
+                              <div *ngIf="this.formViewInventory.value.typeItem ==='Suministro' && this.formViewInventory.value.type ==='Entrada'"  class="p-col-12 p-md-6" style="padding-left: 15px">
+                                  <div class="input-field">
+                                      <label for="name">Fecha de Compra</label>
+                                      <input type="text" pInputText
+                                        id="name"
+                                        readonly="true"
+                                        formControlName="item"
+                                        style="height: 42px;padding-left: 10px;"
+                                        formControlName="dateShop"
+                                      />
+                                  </div>
+                              </div>
+                              <div *ngIf="this.formViewInventory.value.typeItem ==='Suministro'" class="p-col-12 p-md-6" style="padding-left: 15px">
+                                  <div class="input-field">
+                                      <label for="name">Cantidad</label>
+                                      <input type="text" pInputText
+                                        id="name"
+                                        readonly="true"
+                                        formControlName="item"
+                                        style="height: 42px;padding-left: 10px;"
+                                        formControlName="amount"
+                                      />
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </form>
+              </div>
+          </p-dialog>
+      </div>
+    </div>
+</body>
+
+  

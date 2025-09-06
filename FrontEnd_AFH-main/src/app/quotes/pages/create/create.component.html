@@ -1,0 +1,527 @@
+<body>
+  <div class="loading-overlay" *ngIf="loading">
+    <div class="loading-container">
+      <p-progressSpinner styleClass="loading-spinner"></p-progressSpinner>
+      <p class="loading-message">Generando PDF...</p>
+    </div>
+  </div>
+  <!-- SIDEBAR -->
+  <section id="sidebar">
+    <div style="padding-bottom: 20px;" class="boxIcon">
+      <img src="../../assets/Logoafh.png">
+      <p>AFH<br>METALMECANICOS</p>
+    </div>
+    <!-- <div class="textUser">
+      <p>{{ userLocalStorage.name}}</p>
+      <p><strong>{{ userLocalStorage.area}}</strong></p>
+    </div> -->
+    <ul class="side-menu top">
+      <li>
+        <a [routerLink]="['/home']">
+          <i class="bx bxs-dashboard"></i>
+          <span class="text">Inicio</span>
+        </a>
+      </li>
+      <li *ngIf="userLocalStorage.area === 'GERENCIA'">
+        <a [routerLink]="['/staff']">
+          <i class="bx bxs-group"></i>
+          <span class="text">Usuarios</span>
+        </a>
+      </li>
+      <li class="active" *ngIf="userLocalStorage.area === 'GERENCIA' || userLocalStorage.area === 'COMERCIAL'">
+        <a [routerLink]="['/quotes']" >
+          <i class='bx bxs-file' ></i>
+          <span class="text">Cotizaciones</span>
+        </a>
+      </li>
+      <li *ngIf="userLocalStorage.area === 'GERENCIA' || userLocalStorage.area === 'LOGISTICA'">
+        <a [routerLink]="['/tools']">
+          <i class="bx bxs-wrench"></i>
+          <span class="text">Herramientas</span>
+        </a>
+      </li>
+      <li *ngIf="userLocalStorage.area === 'GERENCIA'">
+        <a [routerLink]="['/employes']">
+          <i class="bx bxs-user-account"></i>
+          <span class="text">Empleados</span>
+        </a>
+      </li>
+      <li *ngIf="userLocalStorage.area === 'GERENCIA' || userLocalStorage.area === 'COMERCIAL'">
+        <a [routerLink]="['/clients']">
+          <i class="bx bxs-user-detail"></i>
+          <span class="text">Clientes</span>
+        </a>
+      </li>
+      <li *ngIf="userLocalStorage.area === 'GERENCIA' || userLocalStorage.area === 'LOGISTICA'">
+        <a [routerLink]="['/supplies']">
+          <i class="bx bxs-package"></i>
+          <span class="text">Suministros</span>
+        </a>
+      </li>
+      <li *ngIf="userLocalStorage.area === 'GERENCIA' || userLocalStorage.area === 'LOGISTICA'">
+        <a [routerLink]="['/history']">
+          <i class='bx bx-clipboard'></i>
+          <span class="text">Inventario</span>
+        </a>
+      </li>
+    </ul>
+    <ul class="side-menu">
+			<li>
+				<a [routerLink]="['/configuration']">
+					<i class='bx bxs-cog' ></i>
+					<span class="text">Configuración</span>
+				</a>
+			</li>
+			<li>
+				<a style="cursor:pointer" (click)="this.storageService.logOut()" class="logout">
+					<i class='bx bxs-log-out-circle' ></i>
+					<span class="text">Cerrar Sesión</span>
+				</a>
+			</li>
+		</ul>
+  </section>
+  <!-- SIDEBAR -->
+
+  <!-- CONTENT -->
+  <section id="content">
+    <!-- NAVBAR -->
+    <nav>
+      <i (click)="changeSidebar()" class="bx bx-menu"></i>
+      <div style="width: 90%;"></div>
+      <a href="#" class="profile">
+        <!-- <img [src]="img" /> -->
+      </a>
+    </nav>
+    <!-- NAVBAR -->
+
+    <!-- MAIN -->
+    <p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>
+    <main>
+      <div class="head-title">
+        <div class="left">
+          <h1>Cotizaciones</h1>
+          <ul class="breadcrumb">
+            <li>
+              <a>Cotizaciones</a>
+            </li>
+            <li><i class="bx bx-chevron-right"></i></li>
+            <li>
+              <a class="active">Crear</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="container-fluid">
+        <p-panel>
+          <p-header
+            style="font-size: 20px; font-family: Poppins; font-weight: 700"
+          >
+            Crear Cotizacion
+          </p-header>
+          <form [formGroup]="formAddQuote" (ngSubmit)="addQuote()" autocomplete="off" novalidate>
+            <div class="p-grid p-fluid" style="padding-bottom: 15px">
+              <div class="p-col-12 p-md-6" style="padding-left: 15px">
+                <div class="input-field">
+                  <label for="code">Código</label>
+                  <input
+                    type="text"
+                    pInputText
+                    id="code"
+                    formControlName="code"
+                    style="padding-left: 15px; border-radius: 12px"
+                    readonly="true"
+                  />
+                </div>
+              </div>
+
+              <div
+                class="p-col-12 p-md-6"
+                style="padding-left: 15px; padding-bottom: 15px"
+              >
+                <div class="input-field">
+                  <label for="project">Nombre Proyecto</label>
+                  <input
+                    type="text"
+                    pInputText
+                    id="project"
+                    formControlName="project"
+                    style="padding-left: 15px; border-radius: 12px"
+                    placeholder="ingrese el nombre del trabajo"
+                  />
+                </div>
+                <div
+                    class="p-error"
+                    style="font-family: 'Poppins'"
+                    *ngIf="formAddQuote.get('project')?.touched && formAddQuote.get('project')?.errors?.['required']"
+                  >
+                    El nombre del proyecto es requerido.
+                </div>
+              </div>
+              
+              <div
+                class="p-col-12 p-md-6"
+                style="padding-left: 15px; padding-bottom: 15px"
+              >
+                <div>
+                  <div>
+                    <label for="client">Cliente</label>
+                  </div>
+                  <div>
+                    <p-autoComplete
+                      [suggestions]="resultsClients"
+                      (completeMethod)="findClients($event)"
+                      [dropdown]="true"
+                      [minLength]="1"
+                      id="client"
+                      field="name"
+                      placeholder="digite el nombre del cliente"
+                      formControlName="client"
+                      [style]="{'border-radius': '10px',height: '42px'}" 
+                    ></p-autoComplete>
+                  </div>
+                  <div
+                    class="p-error"
+                    style="font-family: 'Poppins'"
+                    *ngIf="formAddQuote.get('client')?.touched && formAddQuote.get('client')?.errors?.['required']"
+                  >
+                    El cliente es requerido.
+                </div>
+                </div>
+              </div>
+              <div
+                class="p-col-12 p-md-6"
+                style="padding-left: 15px; padding-bottom: 15px"
+              >
+                <div class="input-field">
+                  <label for="deliveryTime">Plazo de entrega:</label>
+                  <input
+                    pInputText
+                    id="deliveryTime"
+                    formControlName="deliveryTime"
+                    style="padding-left: 15px; border-radius: 12px"
+                    placeholder="digite el plazo entrega"
+                  />
+                </div>
+                <div
+                    class="p-error"
+                    style="font-family: 'Poppins'"
+                    *ngIf="formAddQuote.get('deliveryTime')?.touched && formAddQuote.get('deliveryTime')?.errors?.['required']"
+                  >
+                    El plazo de entrega es requerido.
+                </div>
+              </div>
+              <div
+                class="p-col-12 p-md-6"
+                style="padding-left: 15px; padding-bottom: 15px"
+              >
+                <div class="input-field">
+                  <label for="addressedTo">Dirigido a:</label>
+                  <input
+                    pInputText
+                    id="addressedTo"
+                    formControlName="addressedTo"
+                    style="padding-left: 15px; border-radius: 12px"
+                    placeholder="digite a quien va dirigido"
+                  />
+                </div>
+                <div
+                    class="p-error"
+                    style="font-family: 'Poppins'"
+                    *ngIf="formAddQuote.get('addressedTo')?.touched && formAddQuote.get('addressedTo')?.errors?.['required']"
+                  >
+                  Por favor ingresé a quién va dirigido.
+                </div>
+              </div>
+              <div
+                class="p-col-12 p-md-6"
+                style="padding-left: 15px; padding-bottom: 15px"
+              >
+                <div class="input-field">
+                  <label for="area">Cargo:</label>
+                  <input
+                    pInputText
+                    id="area"
+                    formControlName="area"
+                    style="padding-left: 15px; border-radius: 12px"
+                    placeholder="digite el cargo de la persona"
+                  />
+                </div>
+                <div
+                class="p-error"
+                style="font-family: 'Poppins'"
+                *ngIf="formAddQuote.get('area')?.touched && formAddQuote.get('area')?.errors?.['required']"
+              >
+                El cargo de la persona es requerido.
+                </div>
+              </div>
+              
+              <div
+                class="p-col-12 p-md-6"
+                style="padding-left: 15px; padding-bottom: 15px"
+              >
+                <div class="input-field">
+                  <label for="pay">Forma de Pago:</label>
+                  <input
+                    pInputText
+                    id="pay"
+                    formControlName="pay"
+                    style="padding-left: 15px; border-radius: 12px"
+                    placeholder="digite la forma de pago"
+                  />
+                </div>
+                <div
+                class="p-error"
+                style="font-family: 'Poppins'"
+                *ngIf="formAddQuote.get('pay')?.touched && formAddQuote.get('pay')?.errors?.['required']"
+              >
+                La forma de pago es requerida.
+                </div>
+              </div>
+              <div class="p-col-12 p-md-12">
+                <p-divider type="solid"></p-divider>
+              </div>
+              <div style="padding-bottom: 20px;padding-left: 15px;" class="p-col-12 p-md-12">
+                <label><strong>ALCANCE DE LA OFERTA</strong></label>
+              </div>
+              <div class="p-col-12 p-md-12" style="padding-left: 15px">
+                <div class="p-grid">
+                  <div class="p-col-8">
+                    <label for="scope">Alcance</label>
+                    <textarea
+                      style="padding-left: 10px;padding-top:3px"
+                      rows="3"
+                      cols="100"
+                      placeholder="separar los mensajes con ' ; ' (punto y coma)"
+                      pInputTextarea
+                      name="scope"
+                      formControlName="scope"
+                      [autoResize]="true"
+                    ></textarea>
+                    <div
+                      class="p-error"
+                      style="font-family: 'Poppins'"
+                      *ngIf="formAddQuote.get('scope')?.touched && formAddQuote.get('scope')?.errors?.['required']"
+                    >
+                    Los alcances de la oferta son requeridas.
+                    </div>
+                  </div>
+                  <div
+                    style="padding-left: 15px; margin: 30px; align-self: center"
+                    class="p-col-2"
+                  >
+                    <p-checkbox
+                      (onChange)="changeScope($event)"
+                      label="Alcance por defecto"
+                      [binary]="true"
+                    ></p-checkbox>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- RElleno de area de texto -->
+              <div class="p-col-12 p-md-12">
+                <p-divider type="solid"></p-divider>
+              </div>
+              <div style="padding-bottom: 20px;padding-left: 15px;" class="p-col-12 p-md-12">
+                <label><strong>CONDICIONES COMERCIALES</strong></label>
+              </div>
+              
+              <div class="p-col-12 p-md-12" style="padding-left: 15px">
+                <div class="p-grid">
+                  <div class="p-col-8">
+                    <label for="description">Contratante</label>
+                    <textarea
+                      style="padding-left: 10px;padding-top:3px"
+                      rows="4"
+                      cols="100"
+                      placeholder="separar los mensajes con ' ; ' (punto y coma)"
+                      pInputTextarea
+                      name="description"
+                      formControlName="employer"
+                      [autoResize]="true"
+                    ></textarea>
+                    <div
+                      class="p-error"
+                      style="font-family: 'Poppins'"
+                      *ngIf="formAddQuote.get('employer')?.touched && formAddQuote.get('employer')?.errors?.['required']"
+                    >
+                    Las condiciones comerciales del contratante son requeridas.
+                    </div>
+                  </div>
+                  <div
+                    style="padding-left: 15px; margin: 30px; align-self: center"
+                    class="p-col-2"
+                  >
+                    <p-checkbox
+                      (onChange)="changeEmployer($event)"
+                      label="Condición por defecto"
+                      [binary]="true"
+                    ></p-checkbox>
+                  </div>
+                </div>
+              </div>
+              <div class="p-col-12 p-md-12" style="padding-left: 15px">
+                <div class="p-grid">
+                  <div class="p-col-8">
+                    <label for="description">Contratista</label>
+                    <textarea
+                      style="padding-left: 10px;padding-top:3px"
+                      rows="4"
+                      cols="100"
+                      placeholder="separar los mensajes con ' ; ' (punto y coma)"
+                      pInputTextarea
+                      name="description"
+                      formControlName="contractor"
+                      [autoResize]="true"
+                    ></textarea>
+                    <div
+                      class="p-error"
+                      style="font-family: 'Poppins'"
+                      *ngIf="formAddQuote.get('contractor')?.touched && formAddQuote.get('contractor')?.errors?.['required']"
+                    >
+                    Las condiciones comerciales del contratista son requeridas.
+                    </div>
+                  </div>
+                  <div
+                    style="padding-left: 15px; margin: 30px; align-self: center"
+                    class="p-col-2"
+                  >
+                    <p-checkbox
+                      (onChange)="changeContractor($event)"
+                      label="Condición por defecto"
+                      [binary]="true"
+                    ></p-checkbox>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- table -->
+              <div class="p-col-12 p-md-12">
+                <p-divider type="solid"></p-divider>
+              </div>
+              <div style="padding-bottom: 20px;padding-left: 15px;" class="p-col-12 p-md-12">
+                <label><strong>LISTA ITEMS</strong></label>
+              </div>
+              <div class="p-col-12 p-md-12" style="padding-left: 15px">
+                <div class="p-grid">
+                  <div class="p-col-12 p-md-8">
+                    <div class="card">
+                      <p-table selectionMode="single" [(selection)]="selectedItem" [value]="milista"  [tableStyle]="{ 'min-width': '365px' }">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width:4%"></th>
+                                <th style="width:4%">Item</th>
+                                <th style="width:40%">Descripción</th>
+                                <th style="width:5%">Unidad</th>
+                                <th style="width:5%">Cantidad</th>
+                                <th style="width:20%">Valor Unidad</th>
+                                <th style="width:20%">Valor Total</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-item let-editing="editing">
+                            <tr  >
+                              <td>
+                                <p-tableRadioButton [value]="item"></p-tableRadioButton>
+                            </td>
+                              <td style="text-align: center;" pEditableColumnField="number">
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <input [ngModelOptions]="{standalone: true}" pInputText type="text" [(ngModel)]="item.number" />
+                                    </ng-template>
+                                    <ng-template  pTemplate="output">
+                                        {{ item.number }}
+                                    </ng-template>
+                                </p-cellEditor>
+                              </td>
+                              <td [pEditableColumn]="item.description" pEditableColumnField="description">
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                          <textarea style="padding-left: 10px" rows="2" cols="5"  [ngModelOptions]="{standalone: true}" pInputTextarea [(ngModel)]="item.description" ></textarea>
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{ item.description }}
+                                        </ng-template>
+                                    </p-cellEditor>
+                              </td>
+                              <td style="text-align: center;" [pEditableColumn]="item.unit" pEditableColumnField="unit">
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <input [ngModelOptions]="{standalone: true}" pInputText [(ngModel)]="item.unit" />
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{ item.unit }}
+                                        </ng-template>
+                                    </p-cellEditor>
+                              </td>
+                              <td style="text-align: center;" [pEditableColumn]="item.amount" pEditableColumnField="amount">
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                          <p-inputNumber pKeyFilter="int" mode="decimal" [ngModelOptions]="{standalone: true}" [(ngModel)]="item.amount"></p-inputNumber>
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{ item.amount}}
+                                        </ng-template>
+                                    </p-cellEditor>
+                              </td>
+                              <td style="text-align: center;" [pEditableColumn]="item.unitValue" pEditableColumnField="unitValue">
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                          <p-inputNumber mode="decimal" [ngModelOptions]="{standalone: true}" [(ngModel)]="item.unitValue"></p-inputNumber>
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                          {{ formatDecimal(item.unitValue) }}
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td>
+                                <td style="text-align: center;" >
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                          <p-inputNumber mode="decimal" locale="en-CO" [ngModelOptions]="{standalone: true}" [(ngModel)]="item.fullValue" ></p-inputNumber>
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                          {{formatDecimal(item.amount * item.unitValue) }}
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                    </div>
+                  </div>
+                  
+                  <div style="padding: 8px;" class="p-col-6 p-md-2">
+                    <div class="p-d-flex p-jc-center p-ai-center" style="height: 100%;">
+                      <button pButton pRipple type="button" icon="pi pi-plus" (click)="createItem()" class="p-button"></button>
+                    </div>
+                  </div>
+                  <div style="padding: 8px;" class="p-col-6 p-md-2">
+                    <div class="p-d-flex p-jc-center p-ai-center" style="height: 100%;">
+                      <button [disabled]="!selectedItem" pButton pRipple type="button" icon="pi pi-trash" (click)="deleteItem()" class="p-button p-button-danger"></button>
+                    </div>
+                  </div>
+                   
+                  
+                </div>
+                
+              </div> 
+            </div>
+            <div class="flex justify-content-center">
+              <div class="btnCenter">
+                <button
+                  class="btn btn-primary"
+                  type="submit"
+                  [disabled]="this.formAddQuote.invalid"
+                >
+                  Guardar
+                </button>
+                <button type="button" (click)="userBack()">Volver</button>
+              </div>
+            </div>
+          </form>
+        </p-panel>
+      </div>
+    </main>
+    <!-- MAIN -->
+  </section>
+  <!-- CONTENT -->
+</body>

@@ -1,0 +1,239 @@
+<body>
+    <!-- SIDEBAR -->
+    <section id="sidebar">
+      <div style="padding-bottom: 20px;" class="boxIcon">
+      <img src="../../assets/Logoafh.png">
+      <p>AFH<br>METALMECANICOS</p>
+    </div>
+      
+      <ul class="side-menu top">
+        <li>
+          <a [routerLink]="['/home']">
+            <i class='bx bxs-dashboard' ></i>
+            <span class="text">Inicio</span>
+          </a>
+        </li>
+        <li>
+          <a [routerLink]="['/staff']">
+            <i class='bx bxs-group' ></i>
+            <span class="text">Usuarios</span>
+          </a>
+        </li>
+        <li>
+          <a [routerLink]="['/quotes']">
+            <i class='bx bxs-file' ></i>
+            <span class="text">Cotizaciones</span>
+          </a>
+        </li>
+        <li>
+          <a [routerLink]="['/tools']">
+            <i class='bx bxs-wrench' ></i>
+            <span class="text">Herramientas</span>
+          </a>
+        </li>
+        <li class="active">
+          <a [routerLink]="['/employes']">
+            <i class='bx bxs-user-account'></i>
+            <span class="text">Empleados</span>
+          </a>
+        </li>
+        <li>
+          <a [routerLink]="['/clients']">
+            <i class='bx bxs-user-detail'></i>
+            <span class="text">Clientes</span>
+          </a>
+        </li>
+        <li>
+          <a [routerLink]="['/supplies']">
+            <i class='bx bxs-package' ></i>
+            <span class="text">Suministros</span>
+          </a>
+        </li>
+        <li *ngIf="userLocalStorage.area === 'GERENCIA' || userLocalStorage.area === 'LOGISTICA'">
+          <a [routerLink]="['/history']">
+            <i class='bx bx-clipboard'></i>
+            <span class="text">Inventario</span>
+          </a>
+        </li>
+      </ul>
+      <ul class="side-menu">
+        <li>
+          <a [routerLink]="['/configuration']">
+            <i class='bx bxs-cog' ></i>
+            <span class="text">Configuración</span>
+          </a>
+        </li>
+        <li>
+          <a style="cursor:pointer" (click)="this.storageService.logOut()" class="logout">
+            <i class='bx bxs-log-out-circle' ></i>
+            <span class="text">Cerrar Sesión</span>
+          </a>
+        </li>
+      </ul>
+    </section>
+    <!-- SIDEBAR -->
+  
+    <!-- CONTENT -->
+    <section id="content">
+      <!-- NAVBAR -->
+      <nav>
+        <i (click)="changeSidebar()" class="bx bx-menu"></i>
+        <div style="width: 90%;"></div>
+        <a href="#" class="profile">
+          <!-- <img [src]="img" /> -->
+        </a>
+      </nav>
+      <!-- NAVBAR -->
+  
+      <!-- MAIN -->
+      <p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>
+      <main>
+        <div class="head-title">
+          <div class="left">
+            <h1>Actualizar Empleado</h1>
+            <ul class="breadcrumb">
+              <li>
+                <a>Empleado</a>
+              </li>
+              <li><i class="bx bx-chevron-right"></i></li>
+              <li>
+                <a class="active">Actualizar Empleado</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="container-fluid">
+          <p-panel>
+            <p-header
+              style="font-size: 20px; font-family: Poppins; font-weight: 700"
+            >
+              Actualizar Empleado
+            </p-header>
+            <form
+              [formGroup]="formUpdateEmployee"
+              (ngSubmit)="updateEmployee()"
+              novalidate
+            >
+              <div class="p-grid p-fluid" style="padding-bottom: 15px">
+                <div class="p-col-12 p-md-6" style="padding-left: 15px">
+                  <div class="input-field">
+                    <label for="name">Nombre</label>
+                    <input
+                      type="text"
+                      pInputText
+                      id="name"
+                      formControlName="name"
+                      style="padding-left: 15px; border-radius: 12px"
+                      placeholder="ingrese el nombre"
+                      required
+                      autofocus
+                    />
+                    <div
+                      class="p-error"
+                      *ngIf="formUpdateEmployee.get('name')?.touched && formUpdateEmployee.get('name')?.errors?.['required']"
+                    >
+                      El nombre es requerido.
+                    </div>
+                  </div>
+                </div>
+  
+                <div
+                  class="p-col-12 p-md-6"
+                  style="padding-left: 15px; padding-bottom: 15px"
+                >
+                  <div class="input-field">
+                    <label for="brand">Apellido</label>
+                    <input
+                      type="text"
+                      pInputText
+                      id="brand"
+                      formControlName="lastName"
+                      style="padding-left: 15px; border-radius: 12px"
+                      placeholder="ingrese el apellido"
+                      required
+                      autofocus
+                    />
+                    <div
+                      class="p-error"
+                      *ngIf="formUpdateEmployee.get('lastName')?.touched && formUpdateEmployee.get('lastName')?.errors?.['required']"
+                    >
+                      El apellido es requerido.
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="p-col-12 p-md-6"
+                  style="padding-left: 15px; padding-bottom: 15px"
+                >
+                  <div class="input-field">
+                    <label for="brand">Número Teléfono</label>
+                    <input
+                      type="text"
+                      pInputText
+                      id="brand"
+                      formControlName="phoneNumber"
+                      style="padding-left: 15px; border-radius: 12px"
+                      placeholder="ingrese el telefono"
+                      autofocus
+                    />
+                    <div
+                      class="p-error"
+                      *ngIf="formUpdateEmployee.get('brand')?.touched && formUpdateEmployee.get('brand')?.errors?.['required']"
+                    >
+                      El numero de telefono es requerido.
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="p-col-12 p-md-6"
+                  style="padding-left: 15px; padding-bottom: 15px"
+                >
+                  <div class="input-field">
+                    <label for="brand">Documento Identidad</label>
+                    <input
+                      pInputText
+                      id="brand"
+                      pKeyFilter="int"
+                      formControlName="idNumber"
+                      style="padding-left: 15px; border-radius: 12px"
+                      placeholder="ingrese el numero de identificación"
+                      required
+                      autofocus
+                    />
+                    <div
+                      class="p-error"
+                      *ngIf="formUpdateEmployee.get('idNumber')?.touched && formUpdateEmployee.get('idNumber')?.errors?.['required'] || formUpdateEmployee.get('idNumber')?.errors?.['pattern']"
+                    >
+                      Debe ingresar un número de documento.
+                    </div>
+                    <div
+                      class="p-error"
+                      *ngIf="formUpdateEmployee.get('idNumber')?.touched && formUpdateEmployee.get('idNumber')?.errors?.['pattern']"
+                    >
+                      Debe ingresar solo numeros.
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="flex justify-content-center">
+                <div class="btnCenter">
+                  <!-- <button type="submit"  [disabled]="this.formUpdateEmployee.invalid">Agregar</button> -->
+                  <button
+                    class="btn btn-primary"
+                    type="submit"
+                    [disabled]="this.formUpdateEmployee.invalid"
+                  >
+                    Guardar
+                  </button>
+                  <button type="button" (click)="userBack()">Volver</button>
+                </div>
+              </div>
+            </form>
+          </p-panel>
+        </div>
+      </main>
+      <!-- MAIN -->
+    </section>
+    <!-- CONTENT -->
+  </body>
+  

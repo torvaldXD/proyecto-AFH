@@ -1,0 +1,407 @@
+<div class="container-fluid">
+  <p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>
+  <p-tabView styleClass="tabview-Custom">
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <i class="pi pi-calendar"></i>
+        <span style="padding-left: 5px"> Facturas </span>
+      </ng-template>
+      <ng-template pTemplate="content">
+        <form [formGroup]="formAddBill" (ngSubmit)="addBill()" novalidate>
+          <div class="p-grid p-fluid" style="padding-bottom: 15px">
+            <div class="p-col-12 p-md-6" style="padding-left: 15px">
+              <div class="input-field">
+                <label for="name">Proveedor</label>
+                <input
+                  type="text"
+                  pInputText
+                  id="name"
+                  formControlName="provider"
+                  style="padding-left: 15px; border-radius: 12px"
+                  placeholder="ingrese el nombre del proveedor"
+                  required
+                  autofocus
+                />
+                <div
+                  class="p-error"
+                  *ngIf="formAddBill.get('provider')?.touched && formAddBill.get('provider')?.errors?.['required']"
+                >
+                  El nombre del proveedor es requerido.
+                </div>
+              </div>
+            </div>
+            <div class="p-col-12 p-md-6" style="padding-left: 15px">
+              <div class="input-field">
+                <label for="name">N° Factura</label>
+                <input
+                  type="text"
+                  style="padding-left: 15px; border-radius: 12px"
+                  pInputText
+                  id="age"
+                  formControlName="idBill"
+                  class="form-control"
+                  placeholder="Ingrese el numero de la factura"
+                />
+                <div
+                  class="p-error"
+                  *ngIf="formAddBill.get('idBill')?.touched && formAddBill.get('idBill')?.errors?.['required']"
+                >
+                  El número de la factura es requerido.
+                </div>
+              </div>
+            </div>
+            <div
+              class="p-col-12 p-md-6"
+              style="padding-left: 15px; padding-bottom: 15px"
+            >
+              <div class="input-field">
+                <label for="minRange">Precio</label>
+                <p-inputNumber
+                  [style]="{ 'height.px': 42 }"
+                  (onInput)="changePrice($event)"
+                  formControlName="price"
+                  pKeyFilter="int"
+                  mode="decimal"
+                ></p-inputNumber>
+                <div
+                  class="p-error"
+                  *ngIf="formAddBill.get('price')?.touched && formAddBill.get('price')?.errors?.['required']"
+                >
+                  El precio es requerido.
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="p-col-12 p-md-6"
+              style="padding-left: 15px; padding-bottom: 15px"
+            >
+              <div class="input-field">
+                <label for="unit">Fecha de Compra</label>
+                <p-calendar
+                  [style]="{ width: '100%', height: '42px' }"
+                  placeholder="Ingrese la fecha de compra"
+                  [showIcon]="true"
+                  formControlName="dateShop"
+                ></p-calendar>
+                <div
+                  class="p-error"
+                  *ngIf="formAddBill.get('dateShop')?.touched && formAddBill.get('dateShop')?.errors?.['required']"
+                >
+                  la fecha de compra es requerida.
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="p-col-12 p-md-6"
+              style="padding-left: 15px; padding-bottom: 15px"
+            >
+              <div class="input-field">
+                <label for="minRange">Iva</label>
+                <p-inputNumber
+                  [style]="{ 'height.px': 42 }"
+                  formControlName="vat"
+                  pKeyFilter="int"
+                  mode="decimal"
+                ></p-inputNumber>
+                <div
+                  class="p-error"
+                  *ngIf="formAddBill.get('vat')?.touched && formAddBill.get('vat')?.errors?.['required']"
+                >
+                  El rango minimo es requerido.
+                </div>
+              </div>
+            </div>
+            <div
+              class="p-col-12 p-md-6"
+              style="padding-left: 15px; padding-bottom: 15px"
+            >
+              <div class="input-field">
+                <label for="maxRange">Retenciones</label>
+                <p-inputNumber
+                  [style]="{ 'height.px': 42 }"
+                  (ngModelChange)="changeRetention($event)"
+                  formControlName="retention"
+                  pKeyFilter="int"
+                  mode="decimal"
+                ></p-inputNumber>
+                <div
+                  class="p-error"
+                  *ngIf="formAddBill.get('maxRange')?.touched && formAddBill.get('maxRange')?.errors?.['required']"
+                >
+                  El rango maximo es requerido.
+                </div>
+              </div>
+            </div>
+            <div
+              class="p-col-12 p-md-6"
+              style="padding-left: 15px; padding-bottom: 15px"
+            >
+              <div class="input-field">
+                <label for="unit">Total</label>
+                <p-inputNumber
+                  [style]="{ 'height.px': 42, 'border-radius': '45px' }"
+                  (onInput)="changePrice($event)"
+                  formControlName="total"
+                  pKeyFilter="int"
+                  mode="decimal"
+                ></p-inputNumber>
+                <div
+                  class="p-error"
+                  *ngIf="formAddBill.get('idNumber')?.touched && formAddBill.get('idNumber')?.errors?.['required'] || formAddBill.get('idNumber')?.errors?.['pattern']"
+                >
+                  Debe ingresar un número de documento.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="flex justify-content-center">
+            <div class="btnCenter">
+              <button
+                class="btn btn-primary"
+                type="submit"
+                [disabled]="this.formAddBill.invalid"
+              >
+                Guardar
+              </button>
+              <button type="button">Volver</button>
+            </div>
+          </div>
+        </form>
+      </ng-template>
+    </p-tabPanel>
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <i class="pi pi-calendar"></i>
+        <span style="padding-left: 5px"> Entradas / Salidas </span>
+      </ng-template>
+      <ng-template pTemplate="content">
+        <form [formGroup]="formAddInventory" (ngSubmit)="addHistoryInventory()" >
+          <div class="flex justify-content-center">
+            <div class="p-grid p-fluid">
+              <div class="p-col-12 p-md-6" style="padding-left: 15px">
+                <div class="input-field">
+                  <label for="name">SELECCIONE SI ES ENTRADA O SALIDA</label>
+                  <p-selectButton [options]="optionItem" formControlName="item"  optionLabel="label" optionValue="value"></p-selectButton>
+                </div>
+              </div>
+              <div class="p-col-12 p-md-6" style="padding-left: 15px">
+                <div class="input-field">
+                  <label for="name">SELECCIONE SI ES SUMINISTRO O HERRAMIENTA</label>
+                  <p-selectButton (onChange)="changeEntry($event)" [options]="optionEntry" formControlName="entry"  optionLabel="label" optionValue="value"></p-selectButton>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="p-col-12 p-md-12">
+            <p-divider type="solid"></p-divider>
+          </div>
+          <div *ngIf="this.formAddInventory.value.entry!==null && this.formAddInventory.value.item!==null" class="p-grid p-fluid" style="padding-bottom: 15px">
+            
+            <div class="p-col-12 p-md-6" style="padding-left: 15px">
+              <div class="input-field">
+                <label *ngIf="this.formAddInventory.value.entry ==='supplie'" for="name">Suministro</label>
+                <label *ngIf="this.formAddInventory.value.entry ==='tool'" for="name">Herramienta</label>
+                <p-autoComplete *ngIf="this.formAddInventory.value.entry ==='tool'"
+                      [suggestions]="resultsTools"
+                      (completeMethod)="findAutocompleteTool($event)"
+                      [minLength]="1"
+                      id="client"
+                      field="name"
+                      formControlName="tool"
+                      placeholder="buscar la herramienta"
+                      [dropdown]="true"
+                      [style]="{'border-radius': '10px',height: '42px'}" 
+                ></p-autoComplete>
+                <p-autoComplete *ngIf="this.formAddInventory.value.entry ==='supplie'"
+                      [suggestions]="resultsSupplies"
+                      (completeMethod)="findAutocompleteSupply($event)"
+                      (onSelect)="selectSupply($event)"
+                      (onClear)="clearSupply($event)"
+                      [dropdown]="true"
+                      [minLength]="1"
+                      id="client"
+                      field="name"
+                      formControlName="supply"
+                      placeholder="buscar el suministro"
+                      
+                      [style]="{'border-radius': '10px',height: '42px'}" 
+                ></p-autoComplete>
+                <div
+                  class="p-error"
+                  *ngIf="formAddInventory.get('provider')?.touched && formAddInventory.get('provider')?.errors?.['required']"
+                >
+                  El nombre del proveedor es requerido.
+                </div>
+              </div>
+            </div>
+            <div class="p-col-12 p-md-6" style="padding-left: 15px" *ngIf="(this.formAddInventory.value.entry==='tool' && this.formAddInventory.value.item==='output') || (this.formAddInventory.value.entry==='supplie' && this.formAddInventory.value.item==='output')">
+              <div class="input-field">
+                <label for="name">Encargado</label>
+                <p-autoComplete
+                      placeholder="Ingrese el nombre del encargado"
+                      [suggestions]="resultsEmployees"
+                      [dropdown]="true"
+                      (completeMethod)="findEmployee($event)"
+                      field="completeName"
+                      [minLength]="1"
+                      id="inCharge"
+                      formControlName="inCharge"
+                      name="inCharge"
+                      [style]="{
+                        height: '42px'
+                      }"
+                    ></p-autoComplete>
+                <div
+                  class="p-error"
+                  *ngIf="formAddInventory.get('idBill')?.touched && formAddInventory.get('idBill')?.errors?.['required']"
+                >
+                  El nombre del encargado es necesario.
+                </div>
+              </div>
+            </div>
+            <div class="p-col-12 p-md-6" style="padding-left: 15px" *ngIf="this.formAddInventory.value.entry==='supplie'">
+              <div class="input-field">
+                <label for="name">N° Factura</label>
+                <p-autoComplete
+                      [suggestions]="resultsBills"
+                      placeholder="Ingrese el numero de factura"
+                      [dropdown]="true"
+                      (completeMethod)="findAutocompleteBills($event)"
+                      field="idBill"
+                      [minLength]="1"
+                      id="inCharge"
+                      formControlName="bill"
+                      name="inCharge"
+                      [style]="{
+                        height: '42px'
+                      }"
+                    ></p-autoComplete>
+                <div
+                  class="p-error"
+                  *ngIf="formAddInventory.get('idBill')?.touched && formAddInventory.get('idBill')?.errors?.['required']"
+                >
+                  El número de la factura es requerido.
+                </div>
+              </div>
+            </div>
+            <div class="p-col-12 p-md-6" style="padding-left: 15px"
+            *ngIf="(this.formAddInventory.value.entry==='tool' && this.formAddInventory.value.item==='output') || (this.formAddInventory.value.entry==='supplie' && this.formAddInventory.value.item==='output')">
+              <div class="input-field">
+                <label for="name">Proyecto</label>
+                <input
+                  type="text"
+                  pInputText
+                  id="name"
+                  formControlName="proyect"
+                  style="padding-left: 15px; border-radius: 12px"
+                  placeholder="ingrese el nombre del proyecto"
+                  
+                />
+                <div
+                  class="p-error"
+                  *ngIf="formAddBill.get('provider')?.touched && formAddBill.get('provider')?.errors?.['required']"
+                >
+                  El nombre del proveedor es requerido.
+                </div>
+              </div>
+            </div>
+            <div
+              class="p-col-12 p-md-6"
+              style="padding-left: 15px; padding-bottom: 15px"
+              *ngIf="this.formAddInventory.value.entry==='supplie' && this.formAddInventory.value.item==='entry'"
+            >
+              <div class="input-field">
+                <label for="unit">Fecha de Compra</label>
+                <p-calendar
+                  [style]="{ width: '100%', height: '42px' }"
+                  placeholder="Ingrese la fecha de compra"
+                  [showIcon]="true"
+                  formControlName="dateShop"
+                ></p-calendar>
+                <div
+                  class="p-error"
+                  *ngIf="formAddInventory.get('dateShop')?.touched && formAddInventory.get('dateShop')?.errors?.['required']"
+                >
+                  la fecha de compra es requerida.
+                </div>
+              </div>
+            </div>
+            
+            <div
+              class="p-col-12 p-md-6"
+              style="padding-left: 15px; padding-bottom: 15px"
+              *ngIf="this.formAddInventory.value.entry==='tool' && this.formAddInventory.value.item==='output'"
+            >
+              <div class="input-field">
+                <label for="unit">Fecha de Salida</label>
+                <p-calendar
+                  [style]="{ width: '100%', height: '42px' }"
+                  placeholder="Ingrese la fecha de compra"
+                  [showIcon]="true"
+                  formControlName="dateOutside"
+                ></p-calendar>
+                <div
+                  class="p-error"
+                  *ngIf="formAddInventory.get('dateShop')?.touched && formAddInventory.get('dateShop')?.errors?.['required']"
+                >
+                  la fecha de compra es requerida.
+                </div>
+              </div>
+            </div>
+            <div
+              class="p-col-12 p-md-6"
+              style="padding-left: 15px; padding-bottom: 15px"
+              *ngIf="this.formAddInventory.value.entry==='tool' && this.formAddInventory.value.item==='output' ||  this.formAddInventory.value.entry==='tool' && this.formAddInventory.value.item==='entry' "
+            >
+              <div class="input-field">
+                <label for="unit">Fecha de Ingreso</label>
+                <p-calendar
+                  [style]="{ width: '100%', height: '42px' }"
+                  placeholder="Ingrese la fecha de compra"
+                  [showIcon]="true"
+                  formControlName="dateInside"
+                ></p-calendar>
+                <div
+                  class="p-error"
+                  *ngIf="formAddInventory.get('dateShop')?.touched && formAddInventory.get('dateShop')?.errors?.['required']"
+                >
+                  la fecha de compra es requerida.
+                </div>
+              </div>
+            </div>
+            <div
+              class="p-col-12 p-md-6"
+              style="padding-left: 15px; padding-bottom: 15px"
+              *ngIf="this.formAddInventory.value.entry==='supplie'"
+            >
+              <div class="input-field">
+                <label for="minRange">Cantidad</label>
+                <p-inputNumber [min]="0" [useGrouping]="false" [style]="{'height.px': 42 }" formControlName="amount" [showButtons]="true" buttonLayout="horizontal" spinnerMode="horizontal" inputId="horizontal" decrementButtonClass="p-button-secondary"
+    incrementButtonClass="p-button-secondary" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" ></p-inputNumber>
+                <div
+                  class="p-error"
+                  *ngIf="formAddInventory.get('vat')?.touched && formAddInventory.get('vat')?.errors?.['required']"
+                >
+                  El rango minimo es requerido.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="flex justify-content-center">
+            <div class="btnCenter">
+              <button
+                class="btn btn-primary"
+                type="submit"
+              >
+                Guardar
+              </button>
+              <button type="button">Volver</button>
+            </div>
+          </div>
+        </form>
+      </ng-template>
+    </p-tabPanel>
+  </p-tabView>
+</div>

@@ -1,0 +1,74 @@
+<p-toast
+  [breakpoints]="{ '950px': { width: '100%' } }"
+  [style]="{ marginTop: '90px' }"
+  position="top-center"
+  key="tl"
+>
+</p-toast>
+<body>
+  <main>
+    <div class="box">
+      <div class="forms-wrap">
+        <form [formGroup]="formLogin" (submit)="send()">
+          <div class="logo">
+            <img src="../../assets/Logoafh.png" alt="" />
+            <h4>AFH Metalmecanico SAS</h4>
+          </div>
+          <div class="heading">
+            <h2>Iniciar Sesión</h2>
+          </div>
+          <div class="input-wrap">
+            <label for="email">Email</label>
+            <input
+              [pKeyFilter]="blockChars"
+              type="email"
+              pInputText
+              id="email"
+              formControlName="email"
+              style="
+                border-radius: 10px;
+                padding-left: 15px;
+                width: 100%;
+                height: 100%;
+              "
+              placeholder="Ingrese el email"
+              required
+              autofocus
+            />
+            <div
+              style="padding-bottom: 10%"
+              class="p-error"
+              *ngIf="formLogin.get('email')?.touched && formLogin.get('email')?.errors?.['required'] || formLogin.get('email')?.errors?.['pattern']"
+            >
+              No es un email válido.
+            </div>
+          </div>
+          <br />
+          <div class="input-wrap">
+            <label for="password">Contraseña</label>
+            <div class="p-grid p-fluid">
+              <div class="p-col-12 p-md-12">
+                <p-password id="password" placeholder="ingrese la contraseña" [style]="{height: '39px','font-family': 'Poppins'}"  [feedback]="false" formControlName="password" [toggleMask]="true"></p-password>
+              </div>
+              <div
+              class="p-error"
+              *ngIf="formLogin.get('password')?.touched && formLogin.get('password')?.errors?.['required']"
+            >
+              Debe ingresar una contraseña.
+            </div>
+            </div>
+          </div>
+          <br />
+          <div class="containerBtn">
+            <button type="submit" [disabled]="isButtonDisabled" class="btn btn-primary">Login</button>
+          </div>
+          <br />
+          <p class="text">
+            Olvido Su Contraseña?
+            <a routerLink="/auth/forgot">Recuperela Aqui</a>
+          </p>
+        </form>
+      </div>
+    </div>
+  </main>
+</body>

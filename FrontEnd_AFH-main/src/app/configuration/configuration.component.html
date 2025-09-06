@@ -1,0 +1,261 @@
+<body>
+  <!-- SIDEBAR -->
+  <section id="sidebar">
+    <!-- <div style="padding-bottom: 20px;" class="boxIcon">
+      <img src="../../assets/Logoafh.png">
+      <p>AFH<br>METALMECANICOS</p>
+    </div> -->
+
+    <div style="padding-bottom: 20px;" class="boxIcon">
+      <img src="../../assets/Logoafh.png">
+      <p>AFH <br>METALMECANICOS</p>
+    </div>
+    <!-- <div class="textUser">
+      <p>{{ userLocalStorage.name }}</p>
+      <p>
+        <strong>{{ userLocalStorage.area }}</strong>
+      </p>
+    </div> -->
+    <ul class="side-menu top">
+      <li>
+        <a [routerLink]="['/home']">
+          <i class="bx bxs-dashboard"></i>
+          <span class="text">Inicio</span>
+        </a>
+      </li>
+      <li *ngIf="userLocalStorage.area === 'GERENCIA'">
+        <a [routerLink]="['/staff']">
+          <i class="bx bxs-group"></i>
+          <span class="text">Usuarios</span>
+        </a>
+      </li>
+      <li
+        *ngIf="
+          userLocalStorage.area === 'GERENCIA' ||
+          userLocalStorage.area === 'COMERCIAL'
+        "
+      >
+        <a [routerLink]="['/quotes']">
+          <i class="bx bxs-file"></i>
+          <span class="text">Cotizaciones</span>
+        </a>
+      </li>
+      <li
+        *ngIf="
+          userLocalStorage.area === 'GERENCIA' ||
+          userLocalStorage.area === 'LOGISTICA'
+        "
+      >
+        <a [routerLink]="['/tools']">
+          <i class="bx bxs-wrench"></i>
+          <span class="text">Herramientas</span>
+        </a>
+      </li>
+      <li *ngIf="userLocalStorage.area === 'GERENCIA'">
+        <a [routerLink]="['/employes']">
+          <i class="bx bxs-user-account"></i>
+          <span class="text">Empleados</span>
+        </a>
+      </li>
+      <li *ngIf="userLocalStorage.area === 'GERENCIA' ||  userLocalStorage.area === 'COMERCIAL'">
+        <a [routerLink]="['/clients']">
+          <i class="bx bxs-user-detail"></i>
+          <span class="text">Clientes</span>
+        </a>
+      </li>
+      <li
+        *ngIf="
+          userLocalStorage.area === 'GERENCIA' ||
+          userLocalStorage.area === 'LOGISTICA'
+        "
+      >
+        <a [routerLink]="['/supplies']">
+          <i class="bx bxs-package"></i>
+          <span class="text">Suministros</span>
+        </a>
+      </li>
+      <li *ngIf="userLocalStorage.area === 'GERENCIA' || userLocalStorage.area === 'LOGISTICA'">
+        <a [routerLink]="['/history']">
+          <i class='bx bx-clipboard'></i>
+          <span class="text">Inventario</span>
+        </a>
+      </li>
+    </ul>
+    <ul class="side-menu">
+      <li class="active">
+        <a [routerLink]="['/configuration']">
+          <i class="bx bxs-cog"></i>
+          <span class="text">Configuración</span>
+        </a>
+      </li>
+      <li>
+        <a style="cursor:pointer" (click)="this.storageService.logOut()" class="logout">
+          <i class="bx bxs-log-out-circle"></i>
+          <span class="text">Cerrar Sesión</span>
+        </a>
+      </li>
+    </ul>
+  </section>
+  <!-- SIDEBAR -->
+
+  <!-- CONTENT -->
+  <section id="content">
+    <!-- NAVBAR -->
+    <nav>
+      <i (click)="changeSidebar()" class="bx bx-menu"></i>
+      <!-- <button (click)="changeSidebar()"><i class="bx bx-menu"></i></button> -->
+      <div style="width: 90%"></div>
+      <a href="#" class="profile">
+        <!-- <img [src]="img" /> -->
+      </a>
+    </nav>
+    <!-- NAVBAR -->
+
+    <!-- MAIN -->
+    <p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>
+    <main>
+      <div class="head-title">
+        <div class="left">
+          <h1>Configuración</h1>
+          <ul class="breadcrumb">
+            <li>
+              <a>Home</a>
+            </li>
+            <li><i class="bx bx-chevron-right"></i></li>
+            <li>
+              <a class="active">Configuración de Usuario</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="container-fluid">
+        <p-panel>
+          <p-header
+            style="font-size: 20px; font-family: Poppins; font-weight: 700"
+          >
+            Modificar Información
+          </p-header>
+          <form
+            [formGroup]="formUserConfiguration"
+            (ngSubmit)="updateUserConfiguration()"
+            novalidate
+          >
+            <div class="d-flex justify-content-center">
+              <div class="text-center">
+                <!-- <img  style="width: 150px;height: 150px;object-fit: cover; border-radius: 50%;" src="{{img}}"   width="200" class="img-fluid"> -->
+              </div>
+            </div>
+            <div class="p-grid p-fluid" style="padding-bottom: 15px">
+              <div
+                class="p-col-12 p-md-6"
+                style="padding-left: 15px; padding-bottom: 15px"
+              >
+                <div class="input-field">
+                  <label for="names">Nombres</label>
+                  <input
+                    type="text"
+                    pInputText
+                    id="names"
+                    formControlName="names"
+                    style="padding-left: 15px; border-radius: 12px"
+                    placeholder="ingrese el nombre completo"
+                  />
+                  <div
+                    class="p-error"
+                    *ngIf="formUserConfiguration.get('names')?.touched && formUserConfiguration.get('names')?.errors?.['required']"
+                  >
+                    Los nombres son requeridos.
+                  </div>
+                </div>
+              </div>
+              <div
+                class="p-col-12 p-md-6"
+                style="padding-left: 15px; padding-bottom: 15px"
+              >
+                <div class="input-field">
+                  <label for="lastNames">Apellidos</label>
+                  <input
+                    pInputText
+                    id="lastNames"
+                    formControlName="lastNames"
+                    style="padding-left: 15px; border-radius: 12px"
+                    placeholder="digite los apellidos"
+                  />
+                  <div
+                    class="p-error"
+                    *ngIf="formUserConfiguration.get('lastNames')?.touched && formUserConfiguration.get('lastNames')?.errors?.['required']"
+                  >
+                    Los apellidos son requeridos.
+                  </div>
+                </div>
+              </div>
+              <div
+                class="p-col-12 p-md-6"
+                style="padding-left: 15px; padding-bottom: 15px"
+              >
+                <div class="input-field">
+                  <label for="deliveryTime">Número de Teléfono</label>
+                  <input
+                    pInputText
+                    id="deliveryTime"
+                    formControlName="phoneNumber"
+                    style="padding-left: 15px; border-radius: 12px"
+                    placeholder="digite el numero de telefono"
+                  />
+                  <div
+                    class="p-error"
+                    *ngIf="formUserConfiguration.get('phoneNumber')?.touched && formUserConfiguration.get('phoneNumber')?.errors?.['required']"
+                  >
+                    El numero de telefono es requerido.
+                  </div>
+                </div>
+              </div>
+              <div
+                class="p-col-12 p-md-6"
+                style="padding-left: 15px; padding-bottom: 15px"
+              >
+                <div class="input-field">
+                  <label for="email">Email</label>
+                  <input
+                    pInputText
+                    id="email"
+                    formControlName="email"
+                    style="padding-left: 15px; border-radius: 12px"
+                    placeholder="digite el email"
+                  />
+                  <div
+                    class="p-error"
+                    *ngIf="formUserConfiguration.get('email')?.touched && formUserConfiguration.get('email')?.errors?.['required']"
+                  >
+                    El email es requerido
+                  </div>
+                  <div
+                    class="p-error"
+                    *ngIf="formUserConfiguration.get('email')?.errors?.['pattern']"
+                  >
+                    No es un email válido..
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="flex justify-content-center">
+              <div class="btnCenter">
+                <button
+                  class="btn btn-primary"
+                  type="submit"
+                  [disabled]="this.formUserConfiguration.invalid"
+                >
+                  Guardar
+                </button>
+                <button type="button" (click)="userBack()">Volver</button>
+                <button type="button" (click)="userChangePassword()">Cambiar <br> contraseña</button>
+              </div>
+            </div>
+          </form>
+        </p-panel>
+      </div>
+    </main>
+    <!-- MAIN -->
+  </section>
+  <!-- CONTENT -->
+</body>

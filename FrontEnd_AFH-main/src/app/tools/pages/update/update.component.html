@@ -1,0 +1,328 @@
+<body>
+  <!-- SIDEBAR -->
+  <section id="sidebar">
+    <div style="padding-bottom: 20px;" class="boxIcon">
+      <img src="../../assets/Logoafh.png">
+      <p>AFH<br>METALMECANICOS</p>
+    </div>
+    <!-- <div class="textUser">
+      <p>{{ userLocalStorage.name}}</p>
+      <p><strong>{{ userLocalStorage.area}}</strong></p>
+    </div> -->
+    <ul class="side-menu top">
+      <li>
+        <a [routerLink]="['/home']">
+          <i class="bx bxs-dashboard"></i>
+          <span class="text">Inicio</span>
+        </a>
+      </li>
+      <li *ngIf="userLocalStorage.area === 'GERENCIA'">
+        <a [routerLink]="['/staff']">
+          <i class="bx bxs-group"></i>
+          <span class="text">Usuarios</span>
+        </a>
+      </li>
+      <li *ngIf="userLocalStorage.area === 'GERENCIA' || userLocalStorage.area === 'COMERCIAL'">
+        <a [routerLink]="['/quotes']" >
+          <i class='bx bxs-file' ></i>
+          <span class="text">Cotizaciones</span>
+        </a>
+      </li>
+      <li  class="active" *ngIf="userLocalStorage.area === 'GERENCIA' || userLocalStorage.area === 'LOGISTICA'">
+        <a [routerLink]="['/tools']">
+          <i class="bx bxs-wrench"></i>
+          <span class="text">Herramientas</span>
+        </a>
+      </li>
+      <li *ngIf="userLocalStorage.area === 'GERENCIA'">
+        <a [routerLink]="['/employes']">
+          <i class="bx bxs-user-account"></i>
+          <span class="text">Empleados</span>
+        </a>
+      </li>
+      <li *ngIf="userLocalStorage.area === 'GERENCIA' ||  userLocalStorage.area === 'COMERCIAL'">
+        <a [routerLink]="['/clients']">
+          <i class="bx bxs-user-detail"></i>
+          <span class="text">Clientes</span>
+        </a>
+      </li>
+      <li *ngIf="userLocalStorage.area === 'GERENCIA' || userLocalStorage.area === 'LOGISTICA'">
+        <a [routerLink]="['/supplies']">
+          <i class="bx bxs-package"></i>
+          <span class="text">Suministros</span>
+        </a>
+      </li>
+      <li *ngIf="userLocalStorage.area === 'GERENCIA' || userLocalStorage.area === 'LOGISTICA'">
+        <a [routerLink]="['/history']">
+          <i class='bx bx-clipboard'></i>
+          <span class="text">Inventario</span>
+        </a>
+      </li>
+    </ul>
+    <ul class="side-menu">
+			<li>
+				<a [routerLink]="['/configuration']">
+					<i class='bx bxs-cog' ></i>
+					<span class="text">Configuración</span>
+				</a>
+			</li>
+			<li>
+				<a style="cursor:pointer" (click)="this.storageService.logOut()" class="logout">
+					<i class='bx bxs-log-out-circle' ></i>
+					<span class="text">Cerrar Sesión</span>
+				</a>
+			</li>
+		</ul>
+  </section>
+  <!-- SIDEBAR -->
+
+  <!-- CONTENT -->
+  <section id="content">
+    <!-- NAVBAR -->
+    <nav>
+      <i (click)="changeSidebar()" class="bx bx-menu"></i>
+      <div style="width: 90%;"></div>
+      <a href="#" class="profile">
+        <!-- <img [src]="img" /> -->
+      </a>
+    </nav>
+    <!-- NAVBAR -->
+
+    <!-- MAIN -->
+    <p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>
+    <main>
+      <div class="head-title">
+        <div class="left">
+          <h1>Actualizar Herramienta</h1>
+          <ul class="breadcrumb">
+            <li>
+              <a>Herramienta</a>
+            </li>
+            <li><i class="bx bx-chevron-right"></i></li>
+            <li>
+              <a class="active">Actualizar Herramienta</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="container-fluid">
+        <p-panel>
+          <p-header
+            style="font-size: 20px; font-family: Poppins; font-weight: 700"
+          >
+            Actualizar Herramienta
+          </p-header>
+
+          <form [formGroup]="formUpdateTool">
+            <div class="d-flex justify-content-center">
+              <div class="text-center">
+                <img src="{{this.imgPath}}"   width="200" class="img-fluid">
+              </div>
+            </div>
+            
+            <p-divider type="solid"></p-divider>
+            <div class="p-grid p-fluid" style="padding-bottom: 15px">
+              <div class="p-col-12 p-md-6" style="padding-left: 15px;padding-bottom: 15px">
+                <div class="input-field">
+                  <div><label for="names">Nombre</label></div>
+                  <div>
+                    <input
+                      type="text"
+                      pInputText
+                      id="name"
+                      formControlName="name"
+                      style="padding-left: 15px; border-radius: 12px"
+                      placeholder="ingrese el nombre"
+                      required
+                      autofocus
+                    />
+                  </div>
+                  <div
+                    class="p-error"
+                    *ngIf="formUpdateTool.get('name')?.touched && formUpdateTool.get('name')?.errors?.['required']"
+                  >
+                    El nombre es requerido.
+                  </div>
+                </div>
+              </div>
+              <div
+                class="p-col-12 p-md-6"
+                style="padding-left: 15px; padding-bottom: 15px"
+              >
+              <div class="input-field">
+                  <div><label for="codeTool">Código Herramienta</label></div>
+                  <div>
+                    <input
+                      id="disabled-input"
+                      type="text"
+                      style="padding-left: 15px; border-radius: 12px"
+                      pInputText
+                      [readonly]="true"
+                      formControlName="codeGenerate"
+                    />
+                  </div>
+
+                  <div
+                    class="p-error"
+                    *ngIf="formUpdateTool.get('codeGenerate')?.touched && formUpdateTool.get('codeGenerate')?.errors?.['required']"
+                  >
+                    El código es requerido.
+                  </div>
+                </div>
+              </div>
+              <div
+                class="p-col-12 p-md-6"
+                style="padding-left: 15px; padding-bottom: 15px"
+              >
+                <div class="input-field">
+                  <div><label for="brand">Marca</label></div>
+                  <div>
+                    <input
+                      type="text"
+                      pInputText
+                      id="brand"
+                      formControlName="brand"
+                      style="padding-left: 15px; border-radius: 12px"
+                      placeholder="ingrese la marca"
+                      required
+                      autofocus
+                    />
+                  </div>
+
+                  <div
+                    class="p-error"
+                    *ngIf="formUpdateTool.get('brand')?.touched && formUpdateTool.get('brand')?.errors?.['required']"
+                  >
+                    La marca es requerida.
+                  </div>
+                </div>
+              </div>
+              <div
+                class="p-col-12 p-md-6"
+                style="padding-left: 15px; padding-bottom: 15px"
+              >
+                <div class="input-field">
+                  <div><label for="role">Estado</label></div>
+                  <div>
+                    <p-dropdown
+                      [style]="{
+                        'border-radius': '12px',
+                        width: '100%',
+                        height: '42px'
+                      }"
+                      (onChange)="changeStatus($event)"
+                      optionLabel="name"
+                      optionValue="value"
+                      [options]="optionStatus"
+                      formControlName="status"
+                    ></p-dropdown>
+                  </div>
+
+                  <div
+                    class="p-error"
+                    *ngIf="formUpdateTool.get('role')?.touched && formUpdateTool.get('role')?.errors?.['required']"
+                  >
+                    El rol es requerido.
+                  </div>
+                </div>
+              </div>
+              <div
+                class="p-col-12 p-md-6"
+                style="padding-left: 15px; padding-bottom: 15px"
+              >
+                <div class="input-field">
+                  <div>
+                    <label for="fecharecepcion">Fecha de Salida </label>
+                  </div>
+                  <div>
+                    <p-calendar (ngModelChange)="changeOptionStatus($event)" id="fecharecepcion" [style]="{ height: '42px'}" dateFormat="yy-mm-dd" [showIcon]="true" formControlName="departureDate"></p-calendar>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="p-col-12 p-md-6"
+                style="padding-left: 15px; padding-bottom: 15px"
+              >
+                <div class="input-field">
+                  <div>
+                    <label for="fecharecepcion">Fecha de Ingreso </label>
+                  </div>
+                  <div>
+                    <p-calendar id="fecharecepcion" [style]="{ height: '42px'}" dateFormat="yy-mm-dd" [showIcon]="true" formControlName="admissionDate"></p-calendar>
+                  </div>
+                </div>
+              </div> 
+              <div
+                class="p-col-12 p-md-6"
+                style="padding-left: 15px; padding-bottom: 15px"
+              >
+                <div >
+                  <div>
+                    <label for="inCharge">Encargado</label>
+                  </div>
+                  <div>
+                    <p-autoComplete
+                      [suggestions]="resultsEmployees"
+                      (completeMethod)="findEmployee($event)"
+                      field="completeName"
+                      [dropdown]="true"
+                      [minLength]="1"
+                      id="inCharge"
+                      name="inCharge"
+                      formControlName="inCharge"
+                      [style]="{
+                        height: '42px'
+                      }"
+                    ></p-autoComplete>
+                  </div>
+                </div>
+              </div>
+              <div class="p-col-12 p-md-12" style="padding-left: 15px">
+                <span class="tittle">Cambiar imagen</span>
+                <p-fileUpload
+                  #fileInput
+                  name="upload[]"
+                  accept="image/*"
+                  [customUpload]="true"
+                  chooseLabel="Actualizar"
+                  cancelLabel="CANCELAR"
+                  uploadLabel="SUBIR"
+                  [multiple]="true"
+                  chooseIcon="pi pi-upload"
+                  uploadIcon="pi pi-arrow-up"
+                  [fileLimit]="1"
+                  [showUploadButton]="false"
+                  [maxFileSize]="9999999"
+                  (uploadHandler)="onUploadFile($event)"
+                  (onClear)="clear()"
+                  (onSelect)="fileSelect($event)"
+                  (onRemove)="remove($event)"
+                  (onUpload)="onUpload()"
+                >
+                  <ng-template
+                    pTemplate="body"
+                    *ngFor="let file of uploadedFiles"
+                  >
+                    <div class="p-grid p-fluid">
+                      <div class="p-col-12 p-md-10">{{ file?.name }}</div>
+                      <div class="p-col-12 p-md-2">{{ file?.size }}</div>
+                    </div>
+                    <br />
+                  </ng-template>
+                </p-fileUpload>
+              </div>
+            </div>
+            <div class="d-flex justify-content-center">
+              <div class="btnCenter">
+                <button type="submit" (click)="updateTool()">Actualizar</button>
+                <button (click)="userBack()">Volver</button>
+              </div>
+            </div>
+          </form>
+        </p-panel>
+      </div>
+    </main>
+    <!-- MAIN -->
+  </section>
+  <!-- CONTENT -->
+</body>

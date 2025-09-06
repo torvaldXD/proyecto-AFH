@@ -1,0 +1,280 @@
+<body>
+    <!-- SIDEBAR -->
+    <section id="sidebar">
+      <div style="padding-bottom: 20px;" class="boxIcon">
+      <img src="../../assets/Logoafh.png">
+      <p>AFH<br>METALMECANICOS</p>
+    </div>
+      
+      <ul class="side-menu top">
+        <li>
+          <a [routerLink]="['/home']">
+            <i class="bx bxs-dashboard"></i>
+            <span class="text">Inicio</span>
+          </a>
+        </li>
+        <li *ngIf="userLocalStorage.area === 'GERENCIA'">
+          <a [routerLink]="['/staff']">
+            <i class="bx bxs-group"></i>
+            <span class="text">Usuarios</span>
+          </a>
+        </li>
+        <li *ngIf="userLocalStorage.area === 'GERENCIA' || userLocalStorage.area === 'COMERCIAL'">
+          <a [routerLink]="['/quotes']" >
+            <i class='bx bxs-file' ></i>
+            <span class="text">Cotizaciones</span>
+          </a>
+        </li>
+        <li *ngIf="userLocalStorage.area === 'GERENCIA' || userLocalStorage.area === 'LOGISTICA'">
+          <a [routerLink]="['/tools']">
+            <i class="bx bxs-wrench"></i>
+            <span class="text">Herramientas</span>
+          </a>
+        </li>
+        <li *ngIf="userLocalStorage.area === 'GERENCIA'">
+          <a [routerLink]="['/employes']">
+            <i class="bx bxs-user-account"></i>
+            <span class="text">Empleados</span>
+          </a>
+        </li>
+        <li *ngIf="userLocalStorage.area === 'GERENCIA'">
+          <a [routerLink]="['/clients']">
+            <i class="bx bxs-user-detail"></i>
+            <span class="text">Clientes</span>
+          </a>
+        </li>
+        <li class="active" *ngIf="userLocalStorage.area === 'GERENCIA' || userLocalStorage.area === 'LOGISTICA'">
+          <a [routerLink]="['/supplies']">
+            <i class="bx bxs-package"></i>
+            <span class="text">Suministros</span>
+          </a>
+        </li>
+        <li *ngIf="userLocalStorage.area === 'GERENCIA' || userLocalStorage.area === 'LOGISTICA'">
+          <a [routerLink]="['/history']">
+            <i class='bx bx-clipboard'></i>
+            <span class="text">Inventario</span>
+          </a>
+        </li>
+      </ul>
+      <ul class="side-menu">
+              <li>
+                  <a [routerLink]="['/configuration']">
+                      <i class='bx bxs-cog' ></i>
+                      <span class="text">Configuración</span>
+                  </a>
+              </li>
+              <li>
+                  <a style="cursor:pointer" (click)="this.storageService.logOut()" class="logout">
+                      <i class='bx bxs-log-out-circle' ></i>
+                      <span class="text">Cerrar Sesión</span>
+                  </a>
+              </li>
+          </ul>
+    </section>
+    <!-- SIDEBAR -->
+  
+    <!-- CONTENT -->
+    <section id="content">
+      <!-- NAVBAR -->
+      <nav>
+        <i (click)="changeSidebar()" class="bx bx-menu"></i>
+        <div style="width: 90%;"></div>
+        <a href="#" class="profile">
+          <!-- <img [src]="img" /> -->
+        </a>
+      </nav>
+      <!-- NAVBAR -->
+  
+      <!-- MAIN -->
+      <p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>
+      <main>
+        <div class="head-title">
+          <div class="left">
+            <h1>Suministros</h1>
+            <ul class="breadcrumb">
+              <li>
+                <a>Suministros</a>
+              </li>
+              <li><i class="bx bx-chevron-right"></i></li>
+              <li>
+                <a class="active">Actualizar Suministros</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="container-fluid">
+          <p-panel>
+            <p-header
+              style="font-size: 20px; font-family: Poppins; font-weight: 700">
+              Actualizar Suministros
+            </p-header>
+            <form
+              [formGroup]="formUpdateSupply"
+              (ngSubmit)="updateSupply()"
+              novalidate
+            >
+              <div class="p-grid p-fluid" style="padding-bottom: 15px">
+                <div class="p-col-12 p-md-6" style="padding-left: 15px">
+                  <div class="input-field">
+                    <label for="name">Nombre</label>
+                    <input
+                      type="text"
+                      pInputText
+                      id="name"
+                      formControlName="name"
+                      style="padding-left: 15px; border-radius: 12px"
+                      placeholder="ingrese el nombre"
+                      required
+                      autofocus
+                    />
+                    <div
+                      class="p-error"
+                      *ngIf="formUpdateSupply.get('name')?.touched && formUpdateSupply.get('name')?.errors?.['required']"
+                    >
+                      El nombre es requerido.
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="p-col-12 p-md-6"
+                  style="padding-left: 15px; padding-bottom: 15px"
+                >
+                  <div class="input-field">
+                    <label for="description">Descripción</label>
+                    <input
+                      type="text"
+                      pInputText
+                      id="description"
+                      formControlName="description"
+                      style="padding-left: 15px; border-radius: 12px"
+                      placeholder="ingrese la descripcion"
+                    />
+                    <div
+                      class="p-error"
+                      *ngIf="formUpdateSupply.get('description')?.touched && formUpdateSupply.get('description')?.errors?.['required']"
+                    >
+                      la descripcion es requerido.
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="p-col-12 p-md-6"
+                  style="padding-left: 15px; padding-bottom: 15px"
+                >
+                  <div class="input-field">
+                    <label for="unit">Medida</label>
+                    <input
+                      type="text"
+                      pInputText
+                      id="unit"
+                      formControlName="unit"
+                      style="padding-left: 15px; border-radius: 12px"
+                      placeholder="ingrese la unidad"
+                    />
+                    <div
+                      class="p-error"
+                      *ngIf="formUpdateSupply.get('unit')?.touched && formUpdateSupply.get('unit')?.errors?.['required']"
+                    >
+                      la unidad es requerida.
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="p-col-12 p-md-6"
+                  style="padding-left: 15px; padding-bottom: 15px"
+                >
+                  <div class="input-field">
+                    <label for="unit">Stock</label>
+                    <p-dropdown [style]="{'border-radius':'12px',width:'100%',height:'42px'}" optionLabel="name" optionValue="value" [options]="optionRole" formControlName="inventoryStatus"></p-dropdown>
+                    <div
+                      class="p-error"
+                      *ngIf="formUpdateSupply.get('idNumber')?.touched && formUpdateSupply.get('idNumber')?.errors?.['required'] || formUpdateSupply.get('idNumber')?.errors?.['pattern']"
+                    >
+                      Debe ingresar un número de documento.
+                    </div>
+                  </div>
+                </div>
+                <!-- <div
+                  class="p-col-12 p-md-6"
+                  style="padding-left: 15px; padding-bottom: 15px"
+                >
+                  <div class="input-field">
+                    <label for="minRange">Rango Minimo</label>
+                    <input
+                      pInputText
+                      id="minRange"
+                      pKeyFilter="int"
+                      formControlName="minRange"
+                      style="padding-left: 15px; border-radius: 12px"
+                      placeholder="ingrese numero minimo"
+                    />
+                    <div
+                      class="p-error"
+                      *ngIf="formUpdateSupply.get('minRange')?.touched && formUpdateSupply.get('minRange')?.errors?.['required']"
+                    >
+                      El rango minimo es requerido.
+                    </div>
+                  </div>
+                </div> -->
+                <div
+                  class="p-col-12 p-md-6"
+                  style="padding-left: 15px; padding-bottom: 15px"
+                >
+                  <div class="input-field">
+                    <label for="maxRange">Rango Máximo</label>
+                    <input
+                      pInputText
+                      id="maxRange"
+                      pKeyFilter="int"
+                      formControlName="maxRange"
+                      style="padding-left: 15px; border-radius: 12px"
+                      placeholder="ingrese el numero de rango máximo"
+                    />
+                    <div
+                      class="p-error"
+                      *ngIf="formUpdateSupply.get('maxRange')?.touched && formUpdateSupply.get('maxRange')?.errors?.['required']"
+                    >
+                      El rango máximo es requerido.
+                    </div>
+                  </div>
+                </div>
+                <div
+                class="p-col-12 p-md-6"
+                style="padding-left: 15px; padding-bottom: 15px"
+              >
+                <div class="input-field">
+                  <label for="unit">Cantidad</label>
+                  <p-inputNumber [min]="0" (ngModelChange)="detectValueInventory($event)" [style]="{'height.px': 42 }" formControlName="amount" [showButtons]="true" buttonLayout="horizontal" spinnerMode="horizontal" inputId="horizontal" decrementButtonClass="p-button-secondary"
+    incrementButtonClass="p-button-secondary" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" ></p-inputNumber>
+                  <div
+                    class="p-error"
+                    *ngIf="formUpdateSupply.get('amount')?.touched && formUpdateSupply.get('amount')?.errors?.['required']"
+                  >
+                    Debe ingresar un número de documento.
+                  </div>
+                </div>
+              </div> 
+                
+              </div>
+              <div class="flex justify-content-center">
+                <div class="btnCenter">
+                  <!-- <button type="submit"  [disabled]="this.formAddQuote.invalid">Agregar</button> -->
+                  <button
+                    class="btn btn-primary"
+                    type="submit"
+                    [disabled]="this.formUpdateSupply.invalid"
+                  >
+                    Guardar
+                  </button>
+                  <button type="button" (click)="userBack()">Volver</button>
+                </div>
+              </div>
+            </form>
+          </p-panel>
+        </div>
+      </main>
+      <!-- MAIN -->
+    </section>
+    <!-- CONTENT -->
+  </body>
+  
