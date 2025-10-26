@@ -6,26 +6,23 @@ const nodemailer = require('nodemailer');
 class Email {
 
     constructor(config) {
-        this.createTransport = nodemailer.createTransport(config);
+        this.transporter = nodemailer.createTransport(config);
     }
 
     sendEmail(email) {
-        try {
-            this.createTransport.sendMail(email, function(error, info) {
+        return new Promise((resolve, reject) => {
+            this.transporter.sendMail(email, (error, info) => {
                 if (error) {
-                    console.info('Error al enviar el email' + error);
+                    console.error('❌ Error al enviar el email:', error);
+                    reject(error);
                 } else {
-                    console.info('Email enviado con exito');
-                    console.info('Message sent: %s', info.messageId);
-                    console.info('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+                    console.log('✅ Email enviado con éxito:', info.messageId);
+                    console.log('📧 Destinatario:', email.to);
+                    resolve(info);
                 }
-
-                this.createTransport.close();
+                // NO cerrar la conexión aquí - se reutiliza
             });
-
-        } catch (err) {
-            console.info(err);
-        }
+        });
     }
 
 }

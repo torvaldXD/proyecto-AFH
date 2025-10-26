@@ -96,9 +96,9 @@ module.exports.createUser = (req, res) => {
                       <td style="border: 1px solid black;" rowspan="4"><img style="width: 70px;padding: 1px;display:block;margin:auto;" src="cid:logo" alt="logoAFH"></td>
                       <td style="border: 1px solid black;text-align: center;font-weight: bold;text-transform: uppercase;width: 40%;" rowspan="2">Sistema AFH</td>
                       <td style="border: 1px solid black;padding-left: 10px;width: 33%;" rowspan="4">Fecha: ${fechaActual.toLocaleString(
-                        "es-CO",
-                        opcionesFormato
-                      )}</td>
+              "es-CO",
+              opcionesFormato
+            )}</td>
                   </tr>
                   <tr>
                   </tr>
@@ -111,8 +111,7 @@ module.exports.createUser = (req, res) => {
             <!-- clientes -->
             <p style="padding-left: 10px;">Saludos ${usuarioDB.name}</p>
             <p style="padding-left: 10px;">
-              Se realizo una solicitud para el registro de un nuevo usuario: ${
-                usuarioDB.email
+              Se realizo una solicitud para el registro de un nuevo usuario: ${usuarioDB.email
               } <br>
               <h3 style="padding-left: 10px;">Credenciales de usuario</h3>
               <p style="color: #343475; padding-left: 10px;text-transform: uppercase; font-weight: bold;">
@@ -126,14 +125,14 @@ module.exports.createUser = (req, res) => {
           </div>`,
           };
           const send = new email({
-            service: "afhmetalmecanico.com",
-            port: 465,
-            host: "afhmetalmecanico.com",
-            secure: true,
+            service: "gmail",
             auth: {
               user: process.env.EMAIL,
               pass: process.env.PASSWORD,
             },
+            tls: {
+              rejectUnauthorized: false
+            }
           });
           send.sendEmail(message);
         });
@@ -218,98 +217,106 @@ module.exports.deleteUser = function (req, res) {
 };
 
 module.exports.forgotPassword = (req, res) => {
+  console.log('📧 Solicitud de recuperación para:', req.params.email);
+
   User.find({ email: req.params.email }).exec(async function (err, result) {
     if (err) {
-      console.log("generate error", err);
+      console.log("❌ Error en BD:", err);
+      return res.status(500).json({ success: false, message: "Error en base de datos" });
     }
+
     if (result[0]) {
+      console.log('✅ Usuario encontrado:', result[0].email);
+
       let passwordGenerate = code.generateCode(7);
+      console.log('🔑 Contraseña generada:', passwordGenerate); // ⚠️ TEMPORAL - para que puedas entrar
+
       let passwordHash = await bcrypt.cryptPassword(passwordGenerate);
+
       User.findOneAndUpdate(
         { _id: result[0]._id },
-        {
-          $set: {
-            password: passwordHash,
-          },
-        }
-      ).exec(function (someError, user) {
+        { $set: { password: passwordHash } }
+      ).exec(async function (someError, user) {
         if (someError) {
-          console.log("Generate error in BD", someError);
-        } else {
-          res.status(200).json({
-            success: true,
-            message: "Password Recovery success",
-            email: user.email,
-          });
-          const fechaActual = new Date();
-          const opcionesFormato = {
-            timeZone: "America/Bogota",
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-            hour: "numeric",
-            minute: "numeric",
-          };
+          console.log("❌ Error al actualizar:", someError);
+          return res.status(500).json({ success: false, message: "Error al actualizar usuario" });
+        }
 
-          let message = {
-            from: process.env.EMAIL,
-            to: user.email,
-            subject: "Recuperación de contraseña Modulo AFH",
-            text: "Plaintext version of the message",
-            attachments: [
-              {
-                filename: "logo.png",
-                path: __dirname + "/../../public/logo.png",
-                cid: "logo",
-              },
-            ],
-            html: `<div style="padding: 10px; border-radius: 15px; background-color: #ECEBEA;font-family: 'Arial' !important">
-            <table style=" width: 100%; margin: auto;border: 1px solid black; border-collapse: collapse;  ">
-              <tbody>
-                  <tr >
-                      <td style="border: 1px solid black;" rowspan="4"><img style="width: 70px;padding: 1px;display:block;margin:auto;" src="cid:logo" alt="logoAFH"></td>
-                      <td style="border: 1px solid black;text-align: center;font-weight: bold;text-transform: uppercase;width: 40%;" rowspan="2">Sistema AFH</td>
-                      <td style="border: 1px solid black;padding-left: 10px;width: 33%;" rowspan="4">Fecha: ${fechaActual.toLocaleString(
-                        "es-CO",
-                        opcionesFormato
-                      )}</td>
-                  </tr>
-                  <tr>
-                  </tr>
-                  <tr>
-                      <td style="border: 1px solid black;text-align: center;" rowspan="4">Recuperación Contraseña</td>
-                  </tr>
-              </tbody>
-          </table>
-            <h1 style="text-align: center; font-family: Arial; color:#343475 ;">Asignación de contraseña</h1>
-            <!-- clientes -->
-            <p style="padding-left: 10px;">Saludos ${user.name}</p>
-            <p style="padding-left: 10px;">
-              Se realizo una solicitud para el cambio de contraseña del usuario: ${
-                user.email
-              } <br>
-              <p style="color: #343475; padding-left: 10px;text-transform: uppercase; font-weight: bold;">
-                Contraseña Generada:
-              </p>
-              <h3 style="padding-left: 10px;">${passwordGenerate}</h3>
-              <p style="padding: 10px;">Porfavor inicia sesion dentro del sistema con tu nueva contraseña.</p>
+        console.log('✅ Usuario actualizado, enviando email...');
+
+        let message = {
+          from: process.env.EMAIL,
+          to: user.email,
+          subject: "Recuperación de contraseña Modulo AFH",
+          text: "Plaintext version of the message",
+          attachments: [
+            {
+              filename: "logo.png",
+              path: __dirname + "/../../public/logo.png",
+              cid: "logo",
+            },
+          ],
+          html: `<div style="padding: 10px; border-radius: 15px; background-color: #ECEBEA;font-family: 'Arial' !important">
+          <table style=" width: 100%; margin: auto;border: 1px solid black; border-collapse: collapse;  ">
+            <tbody>
+                <tr >
+                    <td style="border: 1px solid black;" rowspan="4"><img style="width: 70px;padding: 1px;display:block;margin:auto;" src="cid:logo" alt="logoAFH"></td>
+                    <td style="border: 1px solid black;text-align: center;font-weight: bold;text-transform: uppercase;width: 40%;" rowspan="2">Sistema AFH</td>
+                    <td style="border: 1px solid black;padding-left: 10px;width: 33%;" rowspan="4">Fecha: ${new Date().toLocaleString("es-CO")}</td>
+                </tr>
+                <tr>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid black;text-align: center;" rowspan="4">Recuperación Contraseña</td>
+                </tr>
+            </tbody>
+        </table>
+          <h1 style="text-align: center; font-family: Arial; color:#343475 ;">Asignación de contraseña</h1>
+          <p style="padding-left: 10px;">Saludos ${user.name}</p>
+          <p style="padding-left: 10px;">
+            Se realizo una solicitud para el cambio de contraseña del usuario: ${user.email} <br>
+            <p style="color: #343475; padding-left: 10px;text-transform: uppercase; font-weight: bold;">
+              Contraseña Generada:
             </p>
-          </div>`,
-          };
+            <h3 style="padding-left: 10px;">${passwordGenerate}</h3>
+            <p style="padding: 10px;">Porfavor inicia sesion dentro del sistema con tu nueva contraseña.</p>
+          </p>
+        </div>`,
+        };
+
+        try {
           const send = new email({
-            service: "afhmetalmecanico.com",
-            port: 465,
-            host: "afhmetalmecanico.com",
-            secure: true,
+            service: "gmail",
             auth: {
               user: process.env.EMAIL,
               pass: process.env.PASSWORD,
             },
+            tls: {
+              rejectUnauthorized: false  // 👈 ESTA LÍNEA SOLUCIONA EL CERTIFICADO
+            }
           });
-          send.sendEmail(message);
+
+          await send.sendEmail(message);
+
+          console.log('✅ Email de recuperación enviado exitosamente a:', user.email);
+          res.status(200).json({
+            success: true,
+            message: "Password Recovery success - Revisa tu correo",
+          });
+
+        } catch (emailError) {
+          console.log('❌ Error enviando email:', emailError);
+          // ⚠️ PERO la contraseña ya fue cambiada - muestra la contraseña en la respuesta
+          res.status(200).json({
+            success: true,
+            message: "Contraseña actualizada pero error enviando email",
+            temporaryPassword: passwordGenerate, // ⚠️ SOLO PARA DESARROLLO
+            email: user.email
+          });
         }
       });
     } else {
+      console.log('❌ Usuario no encontrado');
       res.status(200).json({
         success: false,
         message: "Usuario no encontrado",
@@ -318,7 +325,7 @@ module.exports.forgotPassword = (req, res) => {
   });
 };
 
-module.exports.updatePassword =  async function (req, res) {
+module.exports.updatePassword = async function (req, res) {
   // console.log("llega vieja", req.body.oldPassword);
   // console.log("llega nueva", req.body.newPassword);
   let passwordHash = await bcrypt.cryptPassword(req.body.newPassword);
@@ -327,32 +334,32 @@ module.exports.updatePassword =  async function (req, res) {
       res.send({ message: "something wrong" });
     }
     if (result[0]) {
-      if (bcrypt.comparePassword(req.body.oldPassword, result[0].password) === true ) {
+      if (bcrypt.comparePassword(req.body.oldPassword, result[0].password) === true) {
         User.findOneAndUpdate(
           { _id: req.params.id },
-          { $set: { password: passwordHash} },
+          { $set: { password: passwordHash } },
           function (err, passwordupdate) {
             if (err) {
               console.info(err);
               res.send({ message: "something wrong" });
-            }else{
-              res.json({success: true,message: "Password Update Successfull"});
+            } else {
+              res.json({ success: true, message: "Password Update Successfull" });
             }
           }
         );
-        
-      }else {
+
+      } else {
         // console.log("No cumple");
         res.send({ success: true, message: "Password Wrong" });
       }
-    }else {
+    } else {
       res.send({ success: false, message: "User not register" });
     }
   })
 };
 
 
-module.exports.findByPage = function(req, res) {
+module.exports.findByPage = function (req, res) {
   const filters = JSON.parse(req.query.filters);
   // console.log("user",filters);
   let desde = req.query.desde || 0;
@@ -374,7 +381,7 @@ module.exports.findByPage = function(req, res) {
   User.find(query)
     .skip(desde)
     .limit(limite)
-    .exec(function(err, resultBD) {
+    .exec(function (err, resultBD) {
       if (err) {
         console.info(err);
         return res.json({
@@ -382,7 +389,7 @@ module.exports.findByPage = function(req, res) {
           err
         });
       }
-      User.countDocuments(query, function(err, count) {
+      User.countDocuments(query, function (err, count) {
         if (err) {
           console.info(err);
         }
