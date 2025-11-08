@@ -1,136 +1,133 @@
-README — Cómo ejecutar la aplicación (Angular + Node.js + MongoDB)
+# 🧰 SGAFH — Sistema de Gestión para AFH Metalmecánicos S.A.S
 
-Resumen rápido: este proyecto tiene dos partes separadas:
+### 🏗 Proyecto Académico – Universidad del Valle  
+**Curso:** Introducción a la Gestión de Proyectos de Software  
+**Facultad de Ingeniería – Escuela de Ingeniería de Sistemas y Computación**  
+**Programa:** Ingeniería de Sistemas  
+**Fecha:** 2025  
 
-BackEnd_AFH-main → Node.js / Express (API + conexión a MongoDB)
+---
 
-FrontEnd_AFH-main → Angular (interfaz)
+## 👥 Integrantes del equipo
 
-A continuación tienes los pasos para levantar la aplicación localmente, ejemplos de .env, y credenciales de prueba para entrar al sistema.
+| Nombre | Código |
+|--------|--------|
+| **Néstor David Heredia Gutiérrez** | 2058558 |
+| **Óscar David Cuaical** | 2270657 |
+| **Sebastián Marulanda Cárdenas** | 2410241 |
+| **Sebastián Saldaña** | 2410214 |
 
-Requisitos
+**Docente:** Beatriz Eugenia Grass Ramírez  
 
-Node.js >= 16 (incluye npm)
+---
 
-MongoDB local (o Atlas) — en este README asumo MongoDB local en 127.0.0.1:27017
+## 📖 Descripción del Proyecto
 
-Angular CLI (solo si quieres usar ng serve): npm install -g @angular/cli
+El **Sistema de Gestión AFH (SGAFH)** es una aplicación web desarrollada para la empresa **AFH Metalmecánicos S.A.S**, con el propósito de **optimizar la gestión administrativa** de herramientas, suministros, cotizaciones y usuarios.
 
-MongoDB Compass (opcional, para ver/editar datos)
+Esta solución busca digitalizar los procesos internos, reducir errores humanos, aumentar la trazabilidad de la información y mejorar la eficiencia operativa.
 
-1) Configurar y levantar MongoDB (local)
+---
 
-Si tienes MongoDB instalado como servicio en Windows:
+## 🧩 Arquitectura del Sistema
 
+El proyecto está compuesto por dos aplicaciones principales:
+
+- **Backend:** `BackEnd_AFH-main` → Node.js + Express + MongoDB  
+- **Frontend:** `FrontEnd_AFH-main` → Angular  
+
+---
+
+## ⚙️ Requisitos previos
+
+- Node.js >= 16  
+- npm (incluido con Node.js)  
+- MongoDB local (o Atlas)  
+- Angular CLI (si vas a usar `ng serve`)  
+- MongoDB Compass (opcional para visualizar datos)
+
+---
+
+## 🗄️ 1. Configurar y levantar MongoDB
+
+Si usas MongoDB local en Windows:
+
+```bash
 net start MongoDB
+```
 
-
-o abre una terminal y ejecuta:
-
+O manualmente:
+```bash
 mongod
+```
 
-
-Conecta con MongoDB Compass usando la conexión:
-
+Conexión recomendada:
 mongodb://127.0.0.1:27017
+La base de datos utilizada se crea automáticamente al insertar datos:
+SGAFH_BD
 
+## 🖥️ 2. Backend — (BackEnd_AFH-main)
 
-La base de datos usada por la app se llamará SGAFH_BD (se crea automáticamente al insertar datos).
-
-2) Backend — (BackEnd_AFH-main)
 2.1 Instalar dependencias
-
-Abre una terminal en la carpeta del backend:
-
+```bash
 cd BackEnd_AFH-main
 npm install
-
+```
 2.2 Configurar variables de entorno
-
-Copia el .env.example a .env (si no existe) y edita las variables:
-
-cp .env.example .env   # (Windows: crea manualmente .env)
-
-
-Ejemplo de .env (ajusta si usas Atlas):
-
+Copia el archivo .env.example a .env y edita las variables según tu entorno local o Atlas.
+Ejemplo:
+```bash
 DB_URI='mongodb://127.0.0.1:27017/SGAFH_BD'
 PORT=2009
 TOKEN_KEY='/3sT3b4nD3v_2023*/'
 TOKEN_EXPIRATION='7d'
 
-EMAIL='sistemas@afhmetalmecanico.com'    # (opcional: para envío de correos)
-PASSWORD='G3stion@M'                      # (opcional: contraseña SMTP o similar)
+EMAIL='sistemas@afhmetalmecanico.com'
+PASSWORD='G3stion@M'
+```
 
-
-Asegúrate de que DB_URI apunte correctamente a tu MongoDB.
-
-2.3 Generar hash para una contraseña (si necesitas crear/actualizar un usuario)
-
-El proyecto incluye generarHash.js para generar bcrypt hashes. Para usarlo:
-
+2.3 Generar hash para contraseñas
+```bash
 node generarHash.js
-
-
-La salida será algo como:
-
-Hash generado: $2b$12$KO4rsKdAsNW/...
-
-
-Copia ese hash y pégalo en el campo password del documento del usuario en MongoDB (por ejemplo vía Compass). La contraseña en texto plano será la que esté definida dentro de generarHash.js (si el script toma un texto fijo) — si no estás seguro, abre generarHash.js para ver el const password = '...'.
+```
+Esto imprimirá en consola el hash que debes usar en el documento de usuario dentro de MongoDB.
 
 2.4 Iniciar el servidor
-
-Desde la carpeta BackEnd_AFH-main:
-
-node app.js
-# o si hay script en package.json:
+```bash
 npm start
-# o para modo desarrollo (si está configurado):
+```
+o
+```bash
 npm run dev
+```
 
-
-Debes ver en consola algo como:
-
+Salida esperada:
 Servidor corriendo en puerto 2009
 Conectado a MongoDB
 
-3) Frontend — (FrontEnd_AFH-main)
+## 💻 3. Frontend — (FrontEnd_AFH-main)
+
 3.1 Instalar dependencias
-
-En otra terminal:
-
+```bash
 cd FrontEnd_AFH-main
 npm install
+```
 
 3.2 Iniciar Angular
+```bash
 ng serve
+```
+Por defecto estará disponible en:
+👉 http://localhost:4200
 
+Asegúrate de que las peticiones en environment.ts apunten a:
+http://localhost:2009
 
-Si no tienes ng disponible:
+## 🔑 4. Usuario de prueba
 
-npm install -g @angular/cli
-ng serve
+Inserta en la colección users del MongoDB:
 
-
-Angular servirá en:
-
-http://localhost:4200
-
-4) URLs importantes
-
-Frontend: http://localhost:4200
-
-Backend API: http://localhost:2009 (puerto según .env)
-
-Asegúrate de que el frontend esté realizando las peticiones al backend en http://localhost:2009 o la ruta que corresponda (revisa environment.ts si es necesario).
-
-5) Credenciales / Usuario de prueba (sugerido)
-
-Si necesitas credenciales rápidas para entrar al sistema, puedes usar una cuenta de prueba que insertes en la colección users (en MongoDB Compass):
-
-Documento de ejemplo (insertar en SGAFH_BD.users → Add Data → Insert Document):
-
+```bash
 {
   "name": "Admin",
   "lastName": "Test",
@@ -142,38 +139,41 @@ Documento de ejemplo (insertar en SGAFH_BD.users → Add Data → Insert Documen
   "image": "",
   "area": "sistemas"
 }
-
-
 Email: admin@afhmetalmecanico.com
+Contraseña: admin123
+```
 
-Contraseña (texto plano): admin123
+## 🚀 5. Ejecución completa
 
-Nota: la contraseña de arriba ya está guardada como hash ($2b$12$...). Si prefieres una contraseña personalizada:
+Inicia MongoDB localmente.
 
-Abre generarHash.js y define la contraseña deseada.
+Ejecuta el backend (npm run dev o node app.js).
 
-Ejecuta node generarHash.js.
+Abre el frontend (ng serve).
 
-Copia el hash generado y reemplaza el campo password del usuario en MongoDB.
+Accede a http://localhost:4200 e inicia sesión con el usuario de prueba.
 
-6) Solución de problemas comunes
+## 📊 6. Metodología de trabajo (Scrum)
 
-Error: "usuario o contraseña incorrectos"
+El proyecto se desarrolló bajo la metodología ágil Scrum, dividiéndose en Sprints de 15 días con planificación, revisión y retrospectiva.
 
-Asegúrate de que el password en la DB sea el hash correspondiente a la contraseña en texto plano que estás usando.
+🔹 Herramientas utilizadas
+- Jira — Gestión del backlog y seguimiento de tareas
+- Figma — Diseño UI/UX de interfaces
+- GitHub — Control de versiones y colaboración
+- Node.js / Express / MongoDB — Backend
+- Angular — Frontend
 
-Si no coinciden, genera un nuevo hash con node generarHash.js y actualiza el documento del usuario.
 
-Revisa en DevTools → Network la respuesta del endpoint /login para ver el token o el error en detalle.
+## 🧩 7. Módulos principales del sistema
 
-Angular no muestra módulos según role
+- 🔐 Autenticación de usuarios (JWT + bcrypt)
+- 👥 Gestión de usuarios y roles
+- 🧰 Gestión de herramientas y suministros
+- 📄 Gestión de cotizaciones
+- ⚙️ Configuración y seguridad del sistema
 
-Verifica que el token JWT incluya el campo role. Puedes decodificar el JWT en jwt.io para revisar el payload.
+## 🌍 8. Enlaces importantes
 
-Comprueba la lógica del menú/guards en el frontend para que permita role: 'admin'.
-
-Backend no se conecta a MongoDB
-
-Verifica que DB_URI en .env esté correcto y que el servicio mongod esté corriendo.
-
-Revisa la consola del backend para ver el mensaje de conexión o el error.
+- Repositorio GitHub: https://github.com/torvaldXD/proyecto-AFH
+- Jira del proyecto: [SGAFH - Jira Board](https://nestorheredia123.atlassian.net/jira/software/projects/SSDGAM/boards/67/timeline?atlOrigin=eyJpIjoiNDc5MjYxNzJlYjU5NGY2MWJiZWRiNDZhZmM5Zjc1NDEiLCJwIjoiaiJ9)
