@@ -66,7 +66,8 @@ mongodb://127.0.0.1:27017
 La base de datos utilizada se crea automáticamente al insertar datos:
 SGAFH_BD
 
-🖥️ 2. Backend — (BackEnd_AFH-main)
+## 🖥️ 2. Backend — (BackEnd_AFH-main)
+
 2.1 Instalar dependencias
 ```bash
 cd BackEnd_AFH-main
@@ -102,14 +103,16 @@ npm run dev
 
 Salida esperada:
 Servidor corriendo en puerto 2009
-
 Conectado a MongoDB
-💻 3. Frontend — (FrontEnd_AFH-main)
+
+## 💻 3. Frontend — (FrontEnd_AFH-main)
+
 3.1 Instalar dependencias
 ```bash
 cd FrontEnd_AFH-main
 npm install
 ```
+
 3.2 Iniciar Angular
 ```bash
 ng serve
@@ -120,7 +123,8 @@ Por defecto estará disponible en:
 Asegúrate de que las peticiones en environment.ts apunten a:
 http://localhost:2009
 
-🔑 4. Usuario de prueba
+## 🔑 4. Usuario de prueba
+
 Inserta en la colección users del MongoDB:
 
 ```bash
@@ -139,7 +143,8 @@ Email: admin@afhmetalmecanico.com
 Contraseña: admin123
 ```
 
-🚀 5. Ejecución completa
+## 🚀 5. Ejecución completa
+
 Inicia MongoDB localmente.
 
 Ejecuta el backend (npm run dev o node app.js).
@@ -148,21 +153,22 @@ Abre el frontend (ng serve).
 
 Accede a http://localhost:4200 e inicia sesión con el usuario de prueba.
 
-📊 6. Metodología de trabajo (Scrum)
+## 📊 6. Metodología de trabajo (Scrum)
+
 El proyecto se desarrolló bajo la metodología ágil Scrum, dividiéndose en Sprints de 15 días con planificación, revisión y retrospectiva.
 
 🔹 Herramientas utilizadas
-Jira — Gestión del backlog y seguimiento de tareas
-Figma — Diseño UI/UX de interfaces
-GitHub — Control de versiones y colaboración
-Node.js / Express / MongoDB — Backend
-Angular — Frontend
+- Jira — Gestión del backlog y seguimiento de tareas
+- Figma — Diseño UI/UX de interfaces
+- GitHub — Control de versiones y colaboración
+- Node.js / Express / MongoDB — Backend
+- Angular — Frontend
 
 
-🧩 9. Módulos principales del sistema
+## 🧩 7. Módulos principales del sistema
 
-🔐 Autenticación de usuarios (JWT + bcrypt)
-👥 Gestión de usuarios y roles
-🧰 Gestión de herramientas y suministros
-📄 Gestión de cotizaciones
-⚙️ Configuración y seguridad del sistema
+- 🔐 Autenticación de usuarios (JWT + bcrypt)
+- 👥 Gestión de usuarios y roles
+- 🧰 Gestión de herramientas y suministros
+- 📄 Gestión de cotizaciones
+- ⚙️ Configuración y seguridad del sistema
