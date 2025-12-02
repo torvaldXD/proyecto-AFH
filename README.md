@@ -177,3 +177,4 @@ El proyecto se desarrolló bajo la metodología ágil Scrum, dividiéndose en Sp
 
 - Repositorio GitHub: https://github.com/torvaldXD/proyecto-AFH
 - Jira del proyecto: [SGAFH - Jira Board](https://nestorheredia123.atlassian.net/jira/software/projects/SSDGAM/boards/67/timeline?atlOrigin=eyJpIjoiNDc5MjYxNzJlYjU5NGY2MWJiZWRiNDZhZmM5Zjc1NDEiLCJwIjoiaiJ9)
+- Demo aplicativo (video): https://youtu.be/HG0L4axCEw8
